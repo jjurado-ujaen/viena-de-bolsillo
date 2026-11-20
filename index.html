@@ -121,6 +121,10 @@ h2{font-family:var(--font-display);font-size:26px;line-height:1.15;margin:4px 0 
 .item input{width:24px;height:24px;flex:0 0 auto;accent-color:var(--pine)}
 .item label{flex:1}
 .item input:checked + label{text-decoration:line-through;color:var(--muted)}
+.del{font:inherit;font-size:20px;line-height:1;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.add{display:flex;gap:8px;padding:10px 0 4px;border-top:1px solid var(--line)}
+.add input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink)}
+.add button{font:inherit;font-weight:700;font-size:14px;padding:9px 12px;border:0;border-radius:10px;background:var(--pine);color:#fff;cursor:pointer;white-space:nowrap}
 
 footer{max-width:760px;margin:0 auto;padding:0 16px 40px;font-size:12px;color:var(--muted)}
 footer a{color:var(--muted)}
@@ -176,6 +180,7 @@ footer a{color:var(--muted)}
 
   <section id="lista" role="tabpanel" aria-labelledby="tab-lista" hidden>
     <h2>Lista de la compra</h2>
+    <p class="note">Escribe en el recuadro de cada grupo para añadir lo que queráis. Se guarda en este móvil.</p>
     <div class="progress"><div class="note" id="progress"></div><div class="bar"><i id="barFill"></i></div></div>
     <div id="checklist" style="display:flex;flex-direction:column;gap:12px"></div>
     <button class="ghost" id="reset" type="button" style="align-self:flex-start">Desmarcar todo</button>
@@ -242,7 +247,27 @@ footer a{color:var(--muted)}
     amhof:"Carl Wenzel Zajicek Weihnachtsmarkt Am Hof.jpg",
     riesen:"Riesenrad wien nachts 2017-09-24.jpg",
     prater:"Prater Turm Riesenrad Wien Vienna.jpg",
-    praterstern:"Wien - Praterstern.JPG"
+    praterstern:"Wien - Praterstern.JPG",
+    spittelX:"Spittelberg Weihnachtsmarkt 2023 02.jpg",
+    schonX:"Markt und Schloß Schönbrunn Foto G. Fally.JPG",
+    imperial:"Schloss Schönbrunn beleuchtet.JPG",
+    belvX:"Oberes Belvedere mit Weihnachtsmarkt, Panorama.jpg",
+    freyung:"Wien, Freyung, Altwiener Christkindlmarkt 2019.jpg",
+    wintermarkt:"Wintermarkt am Riesenradplatz im Prater 2016.jpg",
+    michaeler:"Wien-Hofburg-140-Michaelerplatz-Einfahrt-Fiaker-2007-gje.jpg",
+    stephans:"Stephansdom Wien Nacht und Schnee.JPG",
+    airport:"Wien Flughafen Schwechat outside Panorama.jpg",
+    panda:"Giant panda at Vienna Zoo (6363291637).jpg",
+    figl:"Figlmüller Bäckerstraße 1.jpg",
+    mozart:"Albertinaplatz mit Hotel Sacher und Cafe Mozart.jpg",
+    amerling:"Amerlingbeisl Stiftgasse Vienna.jpg",
+    nestroy:"Wien 02 Nestroyplatz 01.jpg",
+    luftburg:"Luftbild Luftburg Kolarik im Prater.JPG",
+    joseph:"Breakfast at Joseph Brot.jpg",
+    spar:"17-05-31-Spar-Wien RR71639.jpg",
+    gerngross:"Wien 07 Mariahilfer Straße Kaufhaus Gerngross a.jpg",
+    kirchengasse:"Kirchengasse Wien 2022-08-08 01.jpg",
+    boku:"Gregor Mendel Haus Detail 3.jpg"
   };
   var GRAD = {
     gold:"linear-gradient(135deg,#fbefd2,#f5dfb0)", red:"linear-gradient(135deg,#fbe3e7,#f3c3cc)",
@@ -264,25 +289,35 @@ footer a{color:var(--muted)}
   }
   function photoFor(text){
     var t = (text||"").toLowerCase();
-    if(t.indexOf("tiergarten")>=0||t.indexOf("zoo")>=0) return ["zoo","star","pine"];
-    if(t.indexOf("imperial lights")>=0||t.indexOf("palace gardens")>=0) return ["schon","star","gold"];
-    if(t.indexOf("weihnachtsmarkt schönbrunn")>=0) return ["schon","tree","red"];
+    if(t.indexOf("aeropuerto")>=0) return ["airport","plane","blue"];
+    if(t.indexOf("boku")>=0) return ["boku","laptop","pine"];
+    if(t.indexOf("tiergarten")>=0||t.indexOf("zoo")>=0) return ["panda","star","pine"];
+    if(t.indexOf("imperial lights")>=0||t.indexOf("palace gardens")>=0) return ["imperial","star","gold"];
+    if(t.indexOf("weihnachtsmarkt schönbrunn")>=0) return ["schonX","tree","red"];
+    if(t.indexOf("gerstner")>=0) return ["schon","cup","gold"];
     if(t.indexOf("schönbrunn")>=0) return ["schon","star","gold"];
-    if(t.indexOf("spittelberg")>=0) return ["spittel","tree","red"];
-    if(t.indexOf("belvedere")>=0) return ["belvWinter","tree","blue"];
+    if(t.indexOf("amerling")>=0) return ["amerling","fork","red"];
+    if(t.indexOf("witwe")>=0) return ["spittel","fork","red"];
+    if(t.indexOf("spittelberg")>=0) return ["spittelX","tree","red"];
+    if(t.indexOf("belvedere")>=0) return ["belvX","tree","blue"];
     if(t.indexOf("nationalbibliothek")>=0||t.indexOf("prunksaal")>=0) return ["prunk","star","gold"];
-    if(t.indexOf("graben")>=0||t.indexOf("michaelerplatz")>=0) return ["graben","star","gold"];
-    if(t.indexOf("am hof")>=0) return ["amhof","tree","red"];
+    if(t.indexOf("michaelerplatz")>=0) return ["michaeler","star","gold"];
+    if(t.indexOf("graben")>=0) return ["stephans","star","gold"];
+    if(t.indexOf("am hof")>=0) return ["freyung","tree","red"];
     if(t.indexOf("rathaus")>=0) return ["rathaus","tree","red"];
     if(t.indexOf("riesenrad")>=0) return ["riesen","star","blue"];
-    if(t.indexOf("wintermarkt")>=0) return ["prater","tree","blue"];
+    if(t.indexOf("wintermarkt")>=0) return ["wintermarkt","tree","blue"];
+    if(t.indexOf("luftburg")>=0) return ["luftburg","fork","blue"];
     if(t.indexOf("prater")>=0) return ["prater","star","blue"];
-    if(t.indexOf("nestroy")>=0) return ["praterstern","fork","plum"];
-    if(t.indexOf("figlm")>=0) return [null,"fork","gold"];
-    if(t.indexOf("mozart")>=0) return [null,"cup","plum"];
-    if(t.indexOf("joseph brot")>=0||t.indexOf("bäckerei")>=0) return [null,"bread","gold"];
-    if(t.indexOf("spar")>=0||t.indexOf("lidl")>=0||t.indexOf("billa")>=0) return [null,"cart","pine"];
-    if(t.indexOf("bipa")>=0) return [null,"baby","plum"];
+    if(t.indexOf("nestroy")>=0) return ["nestroy","fork","plum"];
+    if(t.indexOf("figlm")>=0) return ["figl","fork","gold"];
+    if(t.indexOf("mozart")>=0) return ["mozart","cup","plum"];
+    if(t.indexOf("joseph brot")>=0) return ["joseph","bread","gold"];
+    if(t.indexOf("bäckerei")>=0) return [null,"bread","gold"];
+    if(t.indexOf("spar")>=0) return ["spar","cart","pine"];
+    if(t.indexOf("billa")>=0) return ["gerngross","cart","gold"];
+    if(t.indexOf("bipa")>=0) return ["kirchengasse","baby","plum"];
+    if(t.indexOf("lidl")>=0) return [null,"cart","blue"];
     if(t.indexOf("mondscheingasse")>=0) return [null,"house","plum"];
     return [null,"star","plum"];
   }
@@ -414,8 +449,7 @@ footer a{color:var(--muted)}
   })();
   function stopIcon(it){
     var n = (it.n||"").toLowerCase();
-    if(n.indexOf("aeropuerto")>=0) return "plane";
-    if(n.indexOf("taxi")>=0||n.indexOf("tranvía")>=0||n.indexOf("traslado")>=0||n.indexOf("salida")>=0||n.indexOf("regreso")>=0) return "tram";
+        if(n.indexOf("taxi")>=0||n.indexOf("tranvía")>=0||n.indexOf("traslado")>=0||n.indexOf("salida")>=0||n.indexOf("regreso")>=0) return "tram";
     if(n.indexOf("descanso")>=0||n.indexOf("check-in")>=0) return "sofa";
     if(n.indexOf("boku")>=0) return "laptop";
     return null;
@@ -437,7 +471,7 @@ footer a{color:var(--muted)}
     var box = document.getElementById("dayItems"); box.innerHTML="";
     day.items.forEach(function(it){
       var p = photoFor((it.q||"")+" "+it.n);
-      var ic = stopIcon(it); if(ic){ p = [null, ic, it.shop?"pine":"plum"]; }
+      var ic = stopIcon(it); if(ic && !p[0]){ p = [null, ic, it.shop?"pine":"plum"]; }
       var card = el("div","stop"+(it.shop?" shop":""));
       card.appendChild(ph(p[0]?PHOTO[p[0]]:null, p[1], p[2]));
       var body = el("div","body");
@@ -450,7 +484,7 @@ footer a{color:var(--muted)}
   }
 
   /* ---------- Mercados ---------- */
-  var MPHOTO = {spit:"spittel",schon:"schon",belv:"belvWinter",luces:"graben",hof:"amhof",rathaus:"rathaus",prater:"riesen"};
+  var MPHOTO = {spit:"spittelX",schon:"schonX",belv:"belvX",luces:"stephans",hof:"freyung",rathaus:"rathaus",prater:"wintermarkt"};
   var seen = store("viena-seen") || {};
   function renderMarkets(){
     var box = document.getElementById("marketList"); box.innerHTML="";
@@ -480,7 +514,7 @@ footer a{color:var(--muted)}
     SHOPS.forEach(function(s){
       var c = el("article","mini");
       var si = SICON[s.id] || ["cart","plum"];
-      var p = ph(null, si[0], si[1]); p.appendChild(el("span","walk", s.m+" min a pie")); c.appendChild(p);
+      var sp = photoFor(s.n); var p = ph(sp[0]?PHOTO[sp[0]]:null, si[0], si[1]); p.appendChild(el("span","walk", s.m+" min a pie")); c.appendChild(p);
       var b = el("div","body");
       b.appendChild(el("div","tag", s.tag));
       b.appendChild(el("h3","",s.n));
@@ -495,10 +529,7 @@ footer a{color:var(--muted)}
   function renderEats(){
     var box = document.getElementById("eatList"); box.innerHTML="";
     EATS.forEach(function(e){
-      var p = photoFor(e.q+" "+e.n);
-      if(e.n.indexOf("Gerstner")>=0) p = ["schon","cup","gold"];
-      if(e.n.indexOf("Luftburg")>=0) p = ["prater","fork","blue"];
-      if(e.n.indexOf("Amerling")>=0||e.n.indexOf("Witwe")>=0) p = ["spittel","fork","red"];
+      var p = photoFor(e.n+" "+e.q);
       var c = el("article","card");
       c.appendChild(ph(p[0]?PHOTO[p[0]]:null, e.tipo==="Café"?"cup":"fork", p[2], e.tipo));
       var b = el("div","body");
@@ -514,6 +545,7 @@ footer a{color:var(--muted)}
 
   /* ---------- Lista ---------- */
   var checked = store("viena-list") || {};
+  var custom = store("viena-custom") || {};
   function renderList(){
     var box = document.getElementById("checklist"); box.innerHTML="";
     LIST.forEach(function(g,gi){
@@ -526,13 +558,29 @@ footer a{color:var(--muted)}
         var lb = el("label","",name); lb.setAttribute("for", id);
         row.appendChild(cb); row.appendChild(lb); c.appendChild(row);
       });
+      (custom[gi]||[]).forEach(function(name,ci){
+        var id = "c"+gi+"_"+ci+"_"+name;
+        var row = el("div","item");
+        var cb = el("input"); cb.type="checkbox"; cb.id=id; cb.checked=!!checked[id];
+        cb.addEventListener("change", function(){ checked[id]=cb.checked; store("viena-list", checked); updateProgress(); });
+        var lb = el("label","",""); lb.textContent=name; lb.setAttribute("for", id);
+        var del = el("button","del","×"); del.type="button"; del.setAttribute("aria-label","Quitar "+name);
+        del.addEventListener("click", function(){ custom[gi].splice(ci,1); delete checked[id]; store("viena-custom",custom); store("viena-list",checked); renderList(); });
+        row.appendChild(cb); row.appendChild(lb); row.appendChild(del); c.appendChild(row);
+      });
+      var f = el("form","add");
+      var inp = el("input"); inp.type="text"; inp.id="add"+gi; inp.placeholder="Añadir a "+g.g.toLowerCase()+"…"; inp.setAttribute("aria-label","Añadir a "+g.g); inp.autocomplete="off";
+      var btn = el("button","","+ Añadir"); btn.type="submit";
+      f.appendChild(inp); f.appendChild(btn);
+      f.addEventListener("submit", function(ev){ ev.preventDefault(); var v=inp.value.trim(); if(!v) return; (custom[gi]=custom[gi]||[]).push(v); store("viena-custom",custom); renderList(); var n=document.getElementById("add"+gi); if(n) n.focus(); });
+      c.appendChild(f);
       box.appendChild(c);
     });
     updateProgress();
   }
   function updateProgress(){
     var total=0, done=0;
-    LIST.forEach(function(g,gi){ g.items.forEach(function(_,i){ total++; if(checked["i"+gi+"_"+i]) done++; }); });
+    LIST.forEach(function(g,gi){ g.items.forEach(function(_,i){ total++; if(checked["i"+gi+"_"+i]) done++; }); (custom[gi]||[]).forEach(function(name,ci){ total++; if(checked["c"+gi+"_"+ci+"_"+name]) done++; }); });
     document.getElementById("progress").textContent = done+" de "+total+" cosas compradas";
     document.getElementById("barFill").style.width = (total? (100*done/total):0) + "%";
   }
