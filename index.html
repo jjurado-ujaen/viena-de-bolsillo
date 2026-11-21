@@ -103,6 +103,18 @@ h2{font-family:var(--font-display);font-size:26px;line-height:1.15;margin:4px 0 
 
 /* Shops: compact grid */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--soft);padding:5px;border-radius:14px}
+.seg button{font:inherit;font-weight:700;font-size:15px;padding:10px 6px;border:0;border-radius:10px;background:transparent;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:#fff;box-shadow:0 1px 6px rgba(26,26,36,.12)}
+.dishes{display:grid;grid-template-columns:1fr;gap:8px}
+@media (min-width:560px){.dishes{grid-template-columns:1fr 1fr}}
+.dish{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+.dish b{font-size:15px}
+.dish .es{font-size:13px;color:var(--muted)}
+.dish .where{font-size:13px}
+.dish .where span{font-weight:700;color:var(--pine)}
+.pide{font-size:14px;background:var(--soft);border-radius:10px;padding:7px 10px}
+.pide b{color:var(--red)}
 .mini{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 2px 10px rgba(26,26,36,.05)}
 .mini .ph{aspect-ratio:4/3}
 .mini .ph .walk{position:absolute;right:8px;bottom:8px;z-index:1;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:#fff;color:var(--ink)}
@@ -207,12 +219,27 @@ footer a{color:var(--muted)}
 
   <section id="comer" role="tabpanel" aria-labelledby="tab-comer" hidden>
     <h2>Dónde comer y tomar algo</h2>
-    <div class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h4V3zM18 11v10"/></svg><div><b>Cena del sábado:</b> tras Spittelberg, cenad cerca de casa en Amerlingbeisl o Witwe Bolte. Reservad en los sitios populares, sobre todo el domingo.</div></div>
-    <h2>Cafés más bonitos: elegid por la foto</h2>
-    <p class="note">Toca una foto para verla a tamaño completo. Debajo, a cuánto está de casa a pie.</p>
-    <div class="grid" id="cafeGallery"></div>
-    <h2>Restaurantes y cafés del plan</h2>
-    <div id="eatList" style="display:flex;flex-direction:column;gap:14px"></div>
+    <div class="tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h4V3zM18 11v10"/></svg><div><b>Cena del sábado:</b> tras Spittelberg, cenad cerca de casa en Amerlingbeisl, Witwe Bolte o el Schnitzelwirt (abre el sábado hasta las 22:00). Reservad en los sitios populares, sobre todo el domingo.</div></div>
+    <div class="seg" role="tablist" aria-label="Cafés o restaurantes">
+      <button type="button" id="segCafe" aria-pressed="true">☕ Cafés</button>
+      <button type="button" id="segRest" aria-pressed="false">🍽 Restaurantes</button>
+    </div>
+    <div id="paneCafe">
+      <h2>Qué pedir en un café vienés</h2>
+      <div class="dishes" id="dishCafe"></div>
+      <h2>Cafés históricos: elegid por la foto</h2>
+      <p class="note">Toca una foto para verla a tamaño completo. En la esquina, a cuánto está de casa.</p>
+      <div class="grid" id="cafeGallery"></div>
+      <h2>Cafés del plan</h2>
+      <div id="eatCafe" style="display:flex;flex-direction:column;gap:14px"></div>
+    </div>
+    <div id="paneRest" hidden>
+      <h2>Platos típicos y dónde pedirlos</h2>
+      <div class="dishes" id="dishRest"></div>
+      <h2>Restaurantes</h2>
+      <p class="note">Primero los del plan; después, los recomendados por plato típico.</p>
+      <div id="eatRest" style="display:flex;flex-direction:column;gap:14px"></div>
+    </div>
   </section>
 
   <section id="lista" role="tabpanel" aria-labelledby="tab-lista" hidden>
@@ -317,7 +344,15 @@ footer a{color:var(--muted)}
     cSperl:"Cafe Sperl 3607.JPG",
     cPrueckel:"Wien - Café Prückel (1).jpg",
     cSavoy:"Cafe savoy innen.jpg",
-    cRitter:"Wien Cafe Ritter.jpg"
+    cRitter:"Wien Cafe Ritter.jpg",
+    cFrauenhuber:"Frauenhuber z04.JPG",
+    cSchwarzenberg:"Cafe-schwarzenberg-innen-viennaphoto-at.jpg",
+    cBraeunerhof:"Wien Café Bräunerhof innen.jpg",
+    cEiles:"Wien Café Eiles.jpg",
+    cMuseum:"Cafe Museum innen 2012.jpg",
+    cDiglas:"Café Diglas Interior.jpg",
+    cSacher:"Cafe Sacher, Hotel Sacher, Wien.JPG",
+    cDommayer:"Cafe-dommayer-innen-hietzing-viennaphoto-at.jpg"
   };
   var GRAD = {
     gold:"linear-gradient(135deg,#fbefd2,#f5dfb0)", red:"linear-gradient(135deg,#fbe3e7,#f3c3cc)",
@@ -434,11 +469,11 @@ footer a{color:var(--muted)}
     {id:"rathaus", n:"Rathausplatz", d:"El gran Christkindlmarkt, con el Ayuntamiento iluminado, la pista de hielo (Eistraum) y la Weihnachtswelt en el parque, con estaciones para niños.", when:"Domingo 22 · 19:30", hours:"13 nov–26 dic, todos los días 10:00–22:00. Eistraum, mismo horario.", best:"Es el más concurrido: el pico va de 17:00 a 21:00, más en domingo. A las 19:30 hay gente, pero se puede pasear. Si Jesús o los peques se cansan, llegad antes y recortad lo anterior.", q:"Wiener Christkindlmarkt Rathausplatz Wien"},
     {id:"prater", n:"Wintermarkt del Prater", d:"Bajo la noria gigante, con más comida, bebida y entretenimiento que artesanía.", when:"Lunes 23 · 18:15", hours:"20 nov 2026–6 ene 2027. Lun–vie 12:00–22:00; sáb, dom y festivos 11:00–22:00.", best:"A las 17:15 subís a la noria con el atardecer ya cerrado, y el mercadillo luce más con la luz de la noche. Entre semana suele haber menos gente que el fin de semana.", q:"Wintermarkt Prater Wien"},
     {id:"karl", n:"Art Advent Karlsplatz", d:"El mejor para niños: paisaje de paja para jugar, tren de draisinas, carrusel hecho con objetos encontrados, organillo y cuentacuentos en la carpa Sky Tent. Toda la comida es ecológica certificada.", when:"Opcional · niños", hours:"13 nov–23 dic. Las fuentes dan 10:00–22:00 o 12:00–20:00 (comida hasta 21:00): confirmadlo en artadvent.at.", best:"Por la mañana o a primera hora de la tarde, antes del pico de 17:00. Delante de la Karlskirche, a unos 15 min a pie de casa.", q:"Art Advent Karlsplatz Wien"},
-    {id:"akh", n:"Campus Universidad (Altes AKH)", d:"Mercadillo en los patios del antiguo hospital, con tren infantil, carrusel antiguo y pistas de curling. Más tranquilo que Rathausplatz.", when:"Opcional · niños", hours:"Horario 2026: confirmadlo en weihnachtsdorf.at.", best:"Buena alternativa si Rathausplatz está a tope: a unos 10 min a pie desde allí.", q:"Weihnachtsdorf Altes AKH Wien"}
+    {id:"akh", n:"Weihnachtsdorf · Campus Universidad (Altes AKH)", d:"El del reel: un «pueblo de Navidad» bajo los árboles iluminados del patio 1 del antiguo hospital, hoy campus de la Universidad. Tren navideño nostálgico, tiovivo, curling y un árbol de Navidad hecho con trineos. Más local y tranquilo que Rathausplatz.", when:"Opcional · al atardecer", hours:"13 nov–23 dic 2026. Lun–jue 14:00–22:00, vie 14:00–23:00, sáb 11:00–22:00, dom 11:00–21:00. Alser Straße / Spitalgasse, Hof 1, 1090.", best:"Al atardecer, cuando se encienden las luces de los árboles. Desde Rathausplatz son unos 10 min a pie: encaja el domingo antes o después del mercadillo del Ayuntamiento.", q:"Weihnachtsdorf Altes AKH Hof 1 Alser Straße Wien"}
   ];
   /* Galería de cafés (fotos de Wikimedia Commons) */
-  var CAFEPH = {"Café im Kunsthistorischen Museum":"cKHM","Café Central":"cCentral","Demel":"cDemel","Café Hawelka":"cHawelka","Café Landtmann":"cLandtmann","Café Sperl":"cSperl","Café Prückel":"cPrueckel","Café Savoy":"cSavoy","Café Ritter":"cRitter","Café Mozart":"mozart"};
-  var CAFETAG = {"Café im Kunsthistorischen Museum":"Bajo una cúpula","Café Central":"El más icónico","Demel":"Pastelería imperial","Café Hawelka":"Bohemio","Café Landtmann":"Elegante","Café Sperl":"Auténtico","Café Prückel":"Años 50","Café Savoy":"Espejos y lámparas","Café Ritter":"El más cercano","Café Mozart":"Junto a la Ópera"};
+  var CAFEPH = {"Café im Kunsthistorischen Museum":"cKHM","Café Central":"cCentral","Demel":"cDemel","Café Hawelka":"cHawelka","Café Landtmann":"cLandtmann","Café Sperl":"cSperl","Café Prückel":"cPrueckel","Café Savoy":"cSavoy","Café Ritter":"cRitter","Café Mozart":"mozart","Café Frauenhuber":"cFrauenhuber","Café Schwarzenberg":"cSchwarzenberg","Café Bräunerhof":"cBraeunerhof","Café Eiles":"cEiles","Café Museum":"cMuseum","Café Diglas":"cDiglas","Café Sacher":"cSacher","Café Dommayer":"cDommayer"};
+  var CAFETAG = {"Café im Kunsthistorischen Museum":"Bajo una cúpula","Café Central":"El más icónico","Demel":"Pastelería imperial","Café Hawelka":"Bohemio","Café Landtmann":"Elegante","Café Sperl":"Auténtico","Café Prückel":"Años 50","Café Savoy":"Espejos y lámparas","Café Ritter":"El más cercano","Café Mozart":"Junto a la Ópera","Café Frauenhuber":"El más antiguo","Café Schwarzenberg":"En el Ring","Café Bräunerhof":"De escritores","Café Eiles":"Cerca de casa","Café Museum":"Diseño de Loos","Café Diglas":"Tartas caseras","Café Sacher":"La Sachertorte","Café Dommayer":"Junto a Schönbrunn","Café Goldegg":"Modernista"};
   function walkMin(ll){
     var dLat=(ll[0]-48.2017)*111.2, dLon=(ll[1]-16.3527)*74.1;
     return Math.max(3, Math.round(Math.sqrt(dLat*dLat+dLon*dLon)*1.3/0.075));
@@ -465,6 +500,7 @@ footer a{color:var(--muted)}
     {n:"Naschmarkt y mercadillo de pulgas", ll:[48.1981,16.3615], ph:null, when:"Sáb 21 · mañana", d:"El mercado más famoso de Viena. Los sábados por la mañana hay además mercadillo de antigüedades en el extremo de Kettenbrückengasse.", h:"Mercado lun–sáb; domingo cerrado. El mercadillo de pulgas, solo sábados desde primera hora.", tip:"A 10 min a pie de casa y junto al Café Sperl.", q:"Naschmarkt Kettenbrückengasse Wien"},
     {n:"Hundertwasserhaus", ll:[48.2073,16.3943], ph:null, when:"Lun 23 (camino al Prater)", d:"Viviendas de colores con árboles en los balcones y suelos ondulados. Por fuera es gratis; el Hundertwasser Village de enfrente también tiene entrada libre.", h:"Exterior siempre visible.", tip:"Está a 20 min a pie o 2 paradas de tranvía del Prater.", q:"Hundertwasserhaus Kegelgasse 36 Wien"},
     {n:"Stadtpark: Johann Strauss dorado", ll:[48.2047,16.3791], ph:null, when:"Cualquier día", d:"La estatua más fotografiada de Viena, en un parque junto al Ring.", h:"Parque abierto.", tip:"Enfrente está el Café Prückel.", q:"Johann Strauss Denkmal Stadtpark Wien"},
+    {n:"Universidad de Viena (edificio principal)", ll:[48.2132,16.3600], ph:null, when:"Sáb 21 (hasta 18:00) o lun 23", d:"Palacio de la Ringstrasse de 1884 inspirado en las universidades del Renacimiento italiano. Se puede entrar al vestíbulo y pasear por el Arkadenhof, el gran patio con arcadas y bustos de científicos.", h:"Edificio lun–vie 6:00–22:00, sáb 7:00–18:00; domingo cerrado. Las visitas guiadas por dentro son de pago, en alemán o inglés.", tip:"Está junto a la Votivkirche y a 10 min del mercadillo del campus (Altes AKH): podéis juntarlo todo.", q:"Universität Wien Hauptgebäude Universitätsring 1 Wien"},
     {n:"MUSA (arte contemporáneo)", ll:[48.2113,16.3561], ph:null, when:"Sáb 21 o dom 22", d:"Colección de arte contemporáneo de la ciudad, entrada libre. Pequeño y tranquilo, detrás del Ayuntamiento.", h:"Mar–dom 10:00–18:00.", tip:"Buen refugio si hace frío antes de Rathausplatz.", q:"MUSA Felderstraße 6-8 Wien"}
   ];
   /* Mapa: cafés, mercadillos y eventos del fin de semana (21–22 nov) */
@@ -473,7 +509,8 @@ footer a{color:var(--muted)}
     cafe:{n:"Cafés", c:"#8a5a2b"},
     mercado:{n:"Mercadillos", c:"#b3263b"},
     evento:{n:"Eventos", c:"#3f5fd6"},
-    gratis:{n:"Gratis", c:"#1f7a5c"}
+    gratis:{n:"Gratis", c:"#1f7a5c"},
+    rest:{n:"Restaurantes", c:"#d9822b"}
   };
   var POIS = [
     {cat:"cafe", n:"Café im Kunsthistorischen Museum", ll:[48.2039,16.3615], d:"Bajo la cúpula del museo (el del vídeo). Hace falta entrada al museo.", h:"Todos los días 10:00–17:30; jueves también 18:00–22:00.", q:"Café im Kunsthistorischen Museum Wien"},
@@ -485,6 +522,15 @@ footer a{color:var(--muted)}
     {cat:"cafe", n:"Café Prückel", ll:[48.2076,16.3804], d:"Años 50, luminoso, frente al Stadtpark. Más tranquilo.", h:"Todos los días 8:30–22:00.", q:"Café Prückel Stubenring 24 Wien"},
     {cat:"cafe", n:"Café Savoy", ll:[48.1976,16.3602], d:"El más espectacular cerca de casa (12 min): salón de 1896 con espejos enormes y lámparas de araña. En el plan: sábado 17:00.", h:"Lun–jue 10:00–1:00, vie 10:00–2:00, sáb 9:00–2:00, dom 10:00–1:00.", q:"Café Savoy Linke Wienzeile 36 Wien", when:"Sáb 21 · 17:00"},
     {cat:"cafe", n:"Café Ritter", ll:[48.1980,16.3505], d:"Café vienés de 1867 en Mariahilfer Straße, a 7 min de casa, con techos y decoración de época. Solo efectivo (hay cajero dentro).", h:"Lun–sáb 7:30–22:00, dom 9:00–21:00.", q:"Cafe Ritter Mariahilfer Str. 73 Wien"},
+    {cat:"cafe", n:"Café Eiles", ll:[48.2094,16.3548], d:"Café de 1901 con bancos de terciopelo rojo, detrás del Ayuntamiento y a un paseo de casa. Ideal para desayunar.", h:"Lun–vie 7:00–24:00, sáb y dom 8:00–24:00.", q:"Café Eiles Josefstädter Str. 2 Wien"},
+    {cat:"cafe", n:"Café Museum", ll:[48.2014,16.3675], d:"Interior diseñado por Adolf Loos en 1899, junto a Karlsplatz. Famoso por la Kardinalschnitte.", h:"Todos los días 8:00–21:00.", q:"Café Museum Operngasse 7 Wien"},
+    {cat:"cafe", n:"Café Sacher", ll:[48.2039,16.3698], d:"Donde nació la Sachertorte original, junto a la Ópera. Hay cola: reservad o id temprano.", h:"Todos los días 7:00–23:00.", q:"Café Sacher Philharmoniker Str. 4 Wien"},
+    {cat:"cafe", n:"Café Schwarzenberg", ll:[48.2018,16.3739], d:"Café de la Ringstrasse, con ambiente clásico y a veces música en directo.", h:"Lun–vie 7:30–23:30, sáb y dom 8:30–23:30.", q:"Café Schwarzenberg Kärntner Ring 17 Wien"},
+    {cat:"cafe", n:"Café Frauenhuber", ll:[48.2057,16.3723], d:"Uno de los cafés más antiguos de Viena; en este edificio dio Mozart un concierto en 1788.", h:"Lun–sáb 8:00–22:00, dom 10:00–20:00.", q:"Café Frauenhuber Himmelpfortgasse 6 Wien"},
+    {cat:"cafe", n:"Café Bräunerhof", ll:[48.2072,16.3686], d:"Café literario junto a la Hofburg, recién renovado; buen desayuno vienés.", h:"Todos los días 8:00–22:30.", q:"Café Bräunerhof Stallburggasse 2 Wien"},
+    {cat:"cafe", n:"Café Diglas", ll:[48.2086,16.3753], d:"Café de principios del siglo XX junto a Stephansplatz, famoso por sus tartas y su strudel.", h:"Lun–mié 8:00–22:00, jue–vie 8:00–22:30, sáb 9:00–22:30, dom 9:00–18:00.", q:"Café Diglas Wollzeile 10 Wien"},
+    {cat:"cafe", n:"Café Dommayer", ll:[48.1872,16.2990], d:"Café-pastelería junto a la puerta de Hietzing de Schönbrunn. Encaja el sábado al salir del palacio.", h:"Todos los días 7:30–20:30.", q:"Café Dommayer Dommayergasse 1 Wien", when:"Sáb 21 · tras Schönbrunn"},
+    {cat:"cafe", n:"Café Goldegg", ll:[48.1897,16.3762], d:"Café de más de 100 años cerca del Belvedere, con desayunos muy buenos.", h:"Lun–vie 8:00–20:00, sáb y dom 9:00–20:00.", q:"Café Goldegg Argentinierstraße 49 Wien", when:"Dom 22 · cerca del Belvedere"},
     {cat:"cafe", n:"Café Mozart", ll:[48.2043,16.3690], d:"Detrás de la Ópera. Ya está en el plan del domingo a las 17:00.", h:"Todos los días 8:00–23:30.", q:"Café Mozart Albertinaplatz 2 Wien"},
     {cat:"mercado", n:"Spittelberg", ll:[48.2034,16.3556], d:"El más cercano a casa. En el plan: sábado 19:15.", h:"Lun–vie desde 14:00, sáb y dom desde 11:00, hasta 21:30.", q:"Spittelberg Weihnachtsmarkt Wien"},
     {cat:"mercado", n:"Schönbrunn", ll:[48.1858,16.3125], d:"En el plan: sábado 13:00.", h:"Todos los días 10:00–21:00.", q:"Weihnachtsmarkt Schönbrunn Wien"},
@@ -493,7 +539,7 @@ footer a{color:var(--muted)}
     {cat:"mercado", n:"Freyung", ll:[48.2116,16.3652], d:"Mercadillo tradicional vienés, junto a Am Hof.", h:"Todos los días 10:00–21:00.", q:"Altwiener Christkindlmarkt Freyung Wien"},
     {cat:"mercado", n:"Rathausplatz", ll:[48.2107,16.3579], d:"El gran mercadillo: tiovivo de 12 m, tren de renos, pista de patinaje infantil y taller de galletas y velas dentro del Ayuntamiento. En el plan: domingo 19:30.", h:"Todos los días 10:00–22:00.", q:"Wiener Christkindlmarkt Rathausplatz Wien"},
     {cat:"mercado", n:"Art Advent Karlsplatz", ll:[48.2003,16.3713], d:"El mejor para niños: paja para jugar, draisinas, carrusel y cuentacuentos.", h:"10:00–22:00 o 12:00–20:00 según la fuente: confirmadlo.", q:"Art Advent Karlsplatz Wien"},
-    {cat:"mercado", n:"Campus Altes AKH", ll:[48.2153,16.3543], d:"Tren infantil y carrusel antiguo, más tranquilo.", h:"Confirmad el horario.", q:"Weihnachtsdorf Altes AKH Wien"},
+    {cat:"mercado", n:"Weihnachtsdorf Campus Uni (Altes AKH)", ll:[48.2153,16.3543], d:"El «pueblo de Navidad» del reel: árboles iluminados, tren navideño, tiovivo y curling. Mejor al atardecer.", h:"Sáb 11:00–22:00, dom 11:00–21:00, lun–jue 14:00–22:00.", q:"Weihnachtsdorf Altes AKH Hof 1 Alser Straße Wien", when:"Al atardecer"},
     {cat:"mercado", n:"Maria-Theresien-Platz", ll:[48.2047,16.3603], d:"Entre los dos museos, justo al salir del Café del KHM.", h:"Sáb y dom 10:00–21:00.", q:"Weihnachtsdorf Maria-Theresien-Platz Wien"},
     {cat:"mercado", n:"Wintermarkt del Prater", ll:[48.2166,16.3958], d:"Bajo la noria. En el plan: lunes 18:15.", h:"Sáb y dom 11:00–22:00; lun–vie 12:00–22:00.", q:"Wintermarkt Riesenradplatz Wien"},
     {cat:"evento", n:"Light of Creation · Votivkirche", ll:[48.2154,16.3590], d:"Espectáculo inmersivo de luz y música de 30 min dentro de la iglesia. Con niños, mejor el pase de las 20:00. Comprad entrada antes.", h:"Pases nocturnos (p. ej. 20:00, 21:00, 22:30). Unos 34–42 $.", q:"Votivkirche Wien", when:"Sáb y dom · noche"},
@@ -511,15 +557,40 @@ footer a{color:var(--muted)}
     {id:"denns", n:"Denns BioMarkt", a:"Lindengasse 13–15", m:7, tag:"Bio y snacks", d:"Opciones ecológicas."}
   ];
   var EATS = [
-    {n:"Amerlingbeisl", a:"Stiftgasse 8, 1070 Wien", tipo:"Restaurante", when:"Cena del sábado, cerca de casa", d:"Patio-jardín en Spittelberg. Comida austriaca con opciones vegetarianas, tronas y menú infantil. Abre todos los días de 12:00 a 02:00.", q:"Amerlingbeisl Stiftgasse 8 Wien"},
-    {n:"Witwe Bolte", a:"Spittelberg, 1070 Wien", tipo:"Restaurante", when:"Cena del sábado, cerca de casa", d:"El local más antiguo de Spittelberg, con cocina vienesa y carta vegetariana completa. No he encontrado su horario: confirmadlo y reservad.", q:"Witwe Bolte Spittelberg Wien"},
-    {n:"Café Savoy", a:"Linke Wienzeile 36, 1060 Wien", tipo:"Café", when:"Sábado 21 · 17:00", d:"Por su arquitectura, el más especial cerca de casa (unos 12 min a pie): salón de 1896 con espejos gigantes, lámparas de araña y techos altísimos. Abre hasta tarde: lun–jue 10:00–1:00, vie 10:00–2:00, sáb 9:00–2:00 y dom 10:00–1:00.", q:"Café Savoy Linke Wienzeile 36 Wien"},
-    {n:"Café Ritter", a:"Mariahilfer Straße 73, 1060 Wien", tipo:"Café", when:"Cualquier día · a 7 min", d:"Café vienés de 1867 con decoración de época, el clásico más cercano al apartamento. Lun–sáb 7:30–22:00, dom 9:00–21:00. Solo efectivo (hay cajero dentro).", q:"Cafe Ritter Mariahilfer Str. 73 Wien"},
-    {n:"Gerstner K. u. K. Hofzuckerbäcker", a:"Kavalierstrakt 52, Schloss Schönbrunn, 1130 Wien", tipo:"Café", when:"Sábado 21 · en Schönbrunn", d:"Café-restaurante dentro del palacio, con espectáculo de strudel de pago cuatro veces al día (11:00, 12:00, 15:00 y 16:00). Café abierto sáb y dom de 10:00 a 20:00 según una ficha: confirmadlo.", q:"Gerstner Hofzuckerbäcker Schloss Schönbrunn Kavalierstrakt 52 Wien"},
-    {n:"Figlmüller Bäckerstraße", a:"Bäckerstraße 6, 1010 Wien", tipo:"Restaurante", when:"Domingo 22 · 13:10", d:"El schnitzel del plan. Abre todos los días de 11:30 a 23:30 y la cocina cierra a las 22:00. Reservad mesa: es muy popular.", q:"Figlmüller Bäckerstraße 6 Wien"},
-    {n:"Café Mozart", a:"Albertinaplatz 2, 1010 Wien", tipo:"Café", when:"Domingo 22 · 17:00", d:"Café histórico detrás de la Ópera, abierto en domingo. Según su web, abre todos los días de 8:00 a 23:30 y la cocina cierra a las 22:30.", q:"Café Mozart Albertinaplatz 2 Wien"},
-    {n:"Nestroy Gasthaus & Biergarten", a:"Weintraubengasse 7, 1020 Wien", tipo:"Restaurante", when:"Lunes 23 · 14:30", d:"Gasthaus junto a Nestroyplatz. Abre de lunes a viernes, hacia las 10:30–11:00 hasta las 22:00, y cierra sábados y domingos. El lunes sí os sirve.", q:"Nestroy Gasthaus Weintraubengasse 7 Wien"},
-    {n:"Luftburg Kolarik", a:"Prater, 1020 Wien", tipo:"Restaurante", when:"Lunes 23 · en el Prater", d:"Restaurante apto para familias en el Prater, con jardín de invierno acristalado. No he encontrado su horario de invierno: confirmadlo.", q:"Luftburg Kolarik Prater Wien"}
+    {n:"Amerlingbeisl", plan:1, ll:[48.2020,16.3540], pide:"cocina austriaca casera; hay menú infantil y tronas", a:"Stiftgasse 8, 1070 Wien", tipo:"Restaurante", when:"Cena del sábado, cerca de casa", d:"Patio-jardín en Spittelberg. Comida austriaca con opciones vegetarianas, tronas y menú infantil. Abre todos los días de 12:00 a 02:00.", q:"Amerlingbeisl Stiftgasse 8 Wien"},
+    {n:"Witwe Bolte", plan:1, ll:[48.2030,16.3555], pide:"cocina vienesa clásica (preguntad por el plato del día)", a:"Spittelberg, 1070 Wien", tipo:"Restaurante", when:"Cena del sábado, cerca de casa", d:"El local más antiguo de Spittelberg, con cocina vienesa y carta vegetariana completa. No he encontrado su horario: confirmadlo y reservad.", q:"Witwe Bolte Spittelberg Wien"},
+    {n:"Café Savoy", plan:1, pide:"Apfelstrudel y Melange", a:"Linke Wienzeile 36, 1060 Wien", tipo:"Café", when:"Sábado 21 · 17:00", d:"Por su arquitectura, el más especial cerca de casa (unos 12 min a pie): salón de 1896 con espejos gigantes, lámparas de araña y techos altísimos. Abre hasta tarde: lun–jue 10:00–1:00, vie 10:00–2:00, sáb 9:00–2:00 y dom 10:00–1:00.", q:"Café Savoy Linke Wienzeile 36 Wien"},
+    {n:"Café Ritter", pide:"Desayuno vienés o Melange", a:"Mariahilfer Straße 73, 1060 Wien", tipo:"Café", when:"Cualquier día · a 7 min", d:"Café vienés de 1867 con decoración de época, el clásico más cercano al apartamento. Lun–sáb 7:30–22:00, dom 9:00–21:00. Solo efectivo (hay cajero dentro).", q:"Cafe Ritter Mariahilfer Str. 73 Wien"},
+    {n:"Gerstner K. u. K. Hofzuckerbäcker", plan:1, pide:"Apfelstrudel recién hecho", a:"Kavalierstrakt 52, Schloss Schönbrunn, 1130 Wien", tipo:"Café", when:"Sábado 21 · en Schönbrunn", d:"Café-restaurante dentro del palacio, con espectáculo de strudel de pago cuatro veces al día (11:00, 12:00, 15:00 y 16:00). Café abierto sáb y dom de 10:00 a 20:00 según una ficha: confirmadlo.", q:"Gerstner Hofzuckerbäcker Schloss Schönbrunn Kavalierstrakt 52 Wien"},
+    {n:"Figlmüller Bäckerstraße", plan:1, ll:[48.2088,16.3760], pide:"su Schnitzel gigante (de cerdo, más grande que el plato) con ensalada de patata", a:"Bäckerstraße 6, 1010 Wien", tipo:"Restaurante", when:"Domingo 22 · 13:10", d:"El schnitzel del plan. Abre todos los días de 11:30 a 23:30 y la cocina cierra a las 22:00. Reservad mesa: es muy popular.", q:"Figlmüller Bäckerstraße 6 Wien"},
+    {n:"Café Mozart", plan:1, pide:"Melange con una porción de tarta", a:"Albertinaplatz 2, 1010 Wien", tipo:"Café", when:"Domingo 22 · 17:00", d:"Café histórico detrás de la Ópera, abierto en domingo. Según su web, abre todos los días de 8:00 a 23:30 y la cocina cierra a las 22:30.", q:"Café Mozart Albertinaplatz 2 Wien"},
+    {n:"Nestroy Gasthaus & Biergarten", plan:1, ll:[48.2153,16.3843], pide:"menú del día de cocina austriaca", a:"Weintraubengasse 7, 1020 Wien", tipo:"Restaurante", when:"Lunes 23 · 14:30", d:"Gasthaus junto a Nestroyplatz. Abre de lunes a viernes, hacia las 10:30–11:00 hasta las 22:00, y cierra sábados y domingos. El lunes sí os sirve.", q:"Nestroy Gasthaus Weintraubengasse 7 Wien"},
+    {n:"Luftburg Kolarik", plan:1, ll:[48.2160,16.3990], pide:"cocina austriaca en ambiente familiar", a:"Prater, 1020 Wien", tipo:"Restaurante", when:"Lunes 23 · en el Prater", d:"Restaurante apto para familias en el Prater, con jardín de invierno acristalado. No he encontrado su horario de invierno: confirmadlo.", q:"Luftburg Kolarik Prater Wien"},
+    {n:"Schnitzelwirt", ll:[48.2025,16.3492], pide:"Wiener Schnitzel o Cordon Bleu con ensalada de patata", a:"Neubaugasse 52, 1070 Wien", tipo:"Restaurante", when:"A 5 min de casa · sáb sí", d:"Schnitzel enorme y barato en un local de toda la vida. Raciones gigantes (compartid) y a veces cola corta. Mar–sáb 11:00–22:00; domingo y lunes cerrado.", q:"Schnitzelwirt Neubaugasse 52 Wien"},
+    {n:"Glacis Beisl", ll:[48.2031,16.3571], pide:"Gulasch de ternera y Wiener Schnitzel de ternera", a:"Breite Gasse 4 (MuseumsQuartier), 1070 Wien", tipo:"Restaurante", when:"A 7 min de casa · todos los días", d:"Beisl vienés escondido junto al MuseumsQuartier, conocido por su gulasch. Raciones grandes. Todos los días 12:00–24:00.", q:"Glacis Beisl Breite Gasse 4 Wien"},
+    {n:"Plachutta Wollzeile", ll:[48.2075,16.3787], pide:"Tafelspitz: primero el caldo y luego la ternera hervida con patatas, rábano picante con manzana y salsa de cebollino", a:"Wollzeile 38, 1010 Wien", tipo:"Restaurante", when:"Para probar el Tafelspitz", d:"El templo del Tafelspitz, servido en su olla de cobre. Más caro; reservad. Todos los días 11:30–23:30.", q:"Plachutta Wollzeile 38 Wien"},
+    {n:"Gasthaus Pöschl", ll:[48.2067,16.3738], pide:"Wiener Schnitzel, Tafelspitz y Kaiserschmarrn", a:"Weihburggasse 17, 1010 Wien", tipo:"Restaurante", when:"Cerca de Stephansplatz · dom cerrado", d:"Taberna pequeña y local cerca de Stephansplatz, muy popular: llamad para reservar. Lun–sáb 12:00–23:00; domingo cerrado.", q:"Gasthaus Pöschl Weihburggasse 17 Wien"},
+    {n:"Zum Leupold", ll:[48.2129,16.3630], pide:"Gulasch, Schnitzel y Kaiserschmarrn (hay medias raciones)", a:"Schottengasse 7, 1010 Wien", tipo:"Restaurante", when:"Junto a Freyung y la Universidad", d:"Beisl clásico con medias raciones, prácticas para probar varios platos o para niños. Todos los días 10:30–24:00. Os pilla cerca del Weihnachtsdorf del campus y de Am Hof.", q:"Zum Leupold Schottengasse 7 Wien"},
+    {n:"Gmoa Keller", ll:[48.2005,16.3786], pide:"Gulasch, Blunzengröstl (salteado de morcilla y patata) y Kaiserschmarrn", a:"Am Heumarkt 25, 1030 Wien", tipo:"Restaurante", when:"Cerca del Belvedere y Karlsplatz · dom cerrado", d:"Bodega de cocina vienesa casera, con opción de ración pequeña de gulasch. Lun–sáb 11:00–23:00; domingo cerrado.", q:"Gmoa Keller Am Heumarkt 25 Wien"}
+  ];
+  EATS.forEach(function(e){ if(e.tipo==="Restaurante" && e.ll) POIS.push({cat:"rest", n:e.n, ll:e.ll, d:(e.pide?"Pide: "+e.pide+". ":"")+e.d, h:e.a, q:e.q, when:e.plan?e.when:null}); });
+  var DISH_CAFE = [
+    {n:"Wiener Melange", es:"Café con leche espumada, el clásico vienés.", w:"Cualquier café"},
+    {n:"Einspänner", es:"Café solo en vaso con mucha nata montada encima.", w:"Cualquier café"},
+    {n:"Sachertorte", es:"Tarta de chocolate con mermelada de albaricoque; se toma con nata sin azúcar.", w:"Café Sacher · Demel"},
+    {n:"Apfelstrudel", es:"Hojaldre fino de manzana con canela y pasas, a veces con salsa de vainilla.", w:"Diglas · Sperl · Landtmann · Gerstner"},
+    {n:"Kaiserschmarrn", es:"Tortita esponjosa troceada con azúcar glas y compota de ciruela. Da para dos.", w:"Demel · Frauenhuber · Diglas"},
+    {n:"Topfenstrudel", es:"Strudel relleno de requesón dulce.", w:"Sperl · Landtmann"},
+    {n:"Buchteln", es:"Bollitos de levadura rellenos de mermelada, recién horneados por la tarde.", w:"Café Hawelka"},
+    {n:"Kardinalschnitte", es:"Pastel de merengue y bizcocho con crema de café o de fruta.", w:"Café Museum"}
+  ];
+  var DISH_REST = [
+    {n:"Wiener Schnitzel", es:"Filete empanado y frito. El auténtico es de ternera; el de cerdo se llama «Wiener Art».", w:"Schnitzelwirt · Figlmüller · Glacis Beisl"},
+    {n:"Tafelspitz", es:"Ternera hervida en caldo; se come primero la sopa y luego la carne con rábano picante con manzana y salsa de cebollino.", w:"Plachutta · Gasthaus Pöschl"},
+    {n:"Gulasch", es:"Guiso de ternera con pimentón, al estilo vienés, con pan o Knödel.", w:"Glacis Beisl · Gmoa Keller · Zum Leupold"},
+    {n:"Erdäpfelsalat", es:"Ensalada de patata templada con vinagre: la guarnición del Schnitzel.", w:"Con cualquier Schnitzel"},
+    {n:"Frittatensuppe / Leberknödelsuppe", es:"Caldo con tiras de crepe / con albóndiga de hígado. Típicas de primero.", w:"Schnitzelwirt · Plachutta"},
+    {n:"Kaiserschmarrn de postre", es:"También se pide en restaurantes como plato dulce.", w:"Gasthaus Pöschl · Gmoa Keller · Zum Leupold"}
   ];
   var LIST = [
     {g:"Desayuno", items:["Pan y bollería","Leche","Yogures (yogur de coco Alpro)","Cereales o muesli","Mantequilla y mermelada","Fruta","Café, té o infusiones"]},
@@ -648,9 +719,32 @@ footer a{color:var(--muted)}
   }
 
   /* ---------- Comer ---------- */
+  function renderDishes(id, arr){
+    var box=document.getElementById(id); box.innerHTML="";
+    arr.forEach(function(d){
+      var c=el("div","dish");
+      c.appendChild(el("b","",d.n));
+      c.appendChild(el("div","es",d.es));
+      c.appendChild(el("div","where","<span>Dónde:</span> "+d.w));
+      box.appendChild(c);
+    });
+  }
+  function setSeg(which){
+    var cafe = which!=="rest";
+    document.getElementById("paneCafe").hidden = !cafe;
+    document.getElementById("paneRest").hidden = cafe;
+    document.getElementById("segCafe").setAttribute("aria-pressed", cafe?"true":"false");
+    document.getElementById("segRest").setAttribute("aria-pressed", cafe?"false":"true");
+  }
+  document.getElementById("segCafe").addEventListener("click", function(){ setSeg("cafe"); });
+  document.getElementById("segRest").addEventListener("click", function(){ setSeg("rest"); });
   function renderEats(){
-    var box = document.getElementById("eatList"); box.innerHTML="";
-    EATS.forEach(function(e){
+    renderDishes("dishCafe", DISH_CAFE); renderDishes("dishRest", DISH_REST);
+    var bc = document.getElementById("eatCafe"), br = document.getElementById("eatRest");
+    bc.innerHTML=""; br.innerHTML="";
+    var sorted = EATS.slice().sort(function(a,b){ return (b.plan?1:0)-(a.plan?1:0); });
+    sorted.forEach(function(e){
+      var box = e.tipo==="Café" ? bc : br;
       var p = photoFor(e.n+" "+e.q);
       var c = el("article","card");
       c.appendChild(ph(p[0]?PHOTO[p[0]]:null, e.tipo==="Café"?"cup":"fork", p[2], e.tipo));
@@ -658,6 +752,7 @@ footer a{color:var(--muted)}
       b.appendChild(el("h3","",e.n));
       b.appendChild(el("div","addr",e.a));
       var ch = el("div","chips"); ch.appendChild(el("span","chip gold", e.when)); b.appendChild(ch);
+      if(e.pide) b.appendChild(el("div","pide","<b>Pide:</b> "+e.pide));
       b.appendChild(el("div","desc",e.d));
       var act = el("div","actions");
       var a = el("a","go", I.pin+"Cómo llegar"); a.href = dir(e.q); a.target="_blank"; a.rel="noopener";
