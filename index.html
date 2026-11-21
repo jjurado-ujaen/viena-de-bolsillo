@@ -7,6 +7,7 @@
 <title>Viena de bolsillo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* Layout: full-bleed 4K photo hero, sticky tab bar, one column of photo cards on white. Single light theme. */
@@ -38,8 +39,8 @@ h1 em{font-style:italic;font-weight:500;color:#ffd98a}
 
 /* Tabs */
 nav{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:8px 10px}
-nav button{font:inherit;font-weight:700;font-size:13px;padding:8px 2px 7px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:3px;padding:8px 8px}
+nav button{font:inherit;font-weight:700;font-size:12px;padding:8px 1px 7px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
 nav button svg{width:22px;height:22px}
 nav button[aria-selected="true"]{background:var(--ink);color:#fff}
 
@@ -126,6 +127,23 @@ h2{font-family:var(--font-display);font-size:26px;line-height:1.15;margin:4px 0 
 .add input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink)}
 .add button{font:inherit;font-weight:700;font-size:14px;padding:9px 12px;border:0;border-radius:10px;background:var(--pine);color:#fff;cursor:pointer;white-space:nowrap}
 
+/* Mapa */
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{font:inherit;font-size:14px;font-weight:700;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.filters button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:0 0 auto}
+#map{height:58vh;min-height:320px;border-radius:18px;border:1px solid var(--line);overflow:hidden;background:var(--soft);z-index:0}
+.poi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:5px;box-shadow:0 2px 10px rgba(26,26,36,.05)}
+.poi .top{display:flex;gap:8px;align-items:center}
+.poi h3{font-size:17px;margin:0;line-height:1.2;flex:1}
+.poi .kind{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.poi .d{font-size:14px;color:var(--muted)}
+.poi .hrs{font-size:13px}
+.poi .actions .ghost{padding:5px 9px;font-size:13px}
+.leaflet-popup-content{font-family:var(--font-body);font-size:14px;line-height:1.35}
+.leaflet-popup-content b{font-size:15px}
+.leaflet-popup-content a{color:var(--red);font-weight:700}
+
 footer{max-width:760px;margin:0 auto;padding:0 16px 40px;font-size:12px;color:var(--muted)}
 footer a{color:var(--muted)}
 @media (min-width:640px){.grid{grid-template-columns:repeat(3,1fr)}.stop{grid-template-columns:140px 1fr}.hero{min-height:520px}}
@@ -165,6 +183,14 @@ footer a{color:var(--muted)}
     <div id="marketList" style="display:flex;flex-direction:column;gap:14px"></div>
   </section>
 
+  <section id="mapa" role="tabpanel" aria-labelledby="tab-mapa" hidden>
+    <h2>Mapa del finde</h2>
+    <p class="note">Cafés clásicos, mercadillos y eventos del 21–22 nov. Toca un punto para ver detalles y la ruta a pie.</p>
+    <div class="filters" id="mapFilters"></div>
+    <div id="map" role="region" aria-label="Mapa de Viena"></div>
+    <div id="poiList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
   <section id="tiendas" role="tabpanel" aria-labelledby="tab-tiendas" hidden>
     <h2>Compra para el apartamento</h2>
     <div class="tip red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg><div><b>Domingo 22: supermercados cerrados.</b> Llegáis el viernes a las 22:30, así que la compra grande es el sábado por la tarde (Lidl cierra hacia las 18:00). Joseph Brot figura abierto en domingo: confirmad el horario.</div></div>
@@ -191,6 +217,7 @@ footer a{color:var(--muted)}
   <p>Fotos de <a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>, con licencias libres (CC BY-SA, CC0 o dominio público); toca una foto para ver su autor y licencia. Las fotos necesitan conexión a internet. Horarios y previsión: comprobadlos antes de ir.</p>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script>
 (function(){
   var HOME = "Mondscheingasse 16, 1070 Wien";
@@ -225,6 +252,7 @@ footer a{color:var(--muted)}
     moon:'<svg viewBox="0 0 24 24" fill="none" stroke="#c48b1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>',
     tab_plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
     tab_mercados:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 5 4h14l2 6"/><path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8"/></svg>',
+    tab_mapa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
     tab_tiendas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h10.8L21 7H6.3"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>',
     tab_comer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h4V3zM18 11v10"/></svg>',
     tab_lista:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/></svg>'
@@ -267,7 +295,8 @@ footer a{color:var(--muted)}
     spar:"17-05-31-Spar-Wien RR71639.jpg",
     gerngross:"Wien 07 Mariahilfer Straße Kaufhaus Gerngross a.jpg",
     kirchengasse:"Kirchengasse Wien 2022-08-08 01.jpg",
-    boku:"Gregor Mendel Haus Detail 3.jpg"
+    boku:"Gregor Mendel Haus Detail 3.jpg",
+    karlskirche:"Karlskirche Wien.jpg"
   };
   var GRAD = {
     gold:"linear-gradient(135deg,#fbefd2,#f5dfb0)", red:"linear-gradient(135deg,#fbe3e7,#f3c3cc)",
@@ -380,7 +409,40 @@ footer a{color:var(--muted)}
     {id:"luces", n:"Stephansplatz, Graben y Kohlmarkt", d:"Calles con iluminación navideña. Se hace a pie.", when:"Domingo 22 · 17:45", hours:"Calles iluminadas, sin horario de apertura.", best:"Anochece hacia las 16:15, así que a las 17:45 ya luce toda la iluminación.", q:"Graben Wien"},
     {id:"hof", n:"Am Hof y Freyung", d:"Dos mercadillos cercanos. Am Hof tiene mucha comida (25 puestos de gastronomía).", when:"Domingo 22 · 18:25", hours:"Am Hof: 13 nov–23 dic, lun–jue 11:00–21:00 y vie–dom desde las 10:00. Freyung: 14 nov–23 dic, todos los días 10:00–21:00.", best:"A esa hora hay bastante gente. Es un buen sitio para picar algo de camino a Rathausplatz y el primero que recortar si el grupo va cansado.", q:"Weihnachtsmarkt Am Hof Wien"},
     {id:"rathaus", n:"Rathausplatz", d:"El gran Christkindlmarkt, con el Ayuntamiento iluminado, la pista de hielo (Eistraum) y la Weihnachtswelt en el parque, con estaciones para niños.", when:"Domingo 22 · 19:30", hours:"13 nov–26 dic, todos los días 10:00–22:00. Eistraum, mismo horario.", best:"Es el más concurrido: el pico va de 17:00 a 21:00, más en domingo. A las 19:30 hay gente, pero se puede pasear. Si Jesús o los peques se cansan, llegad antes y recortad lo anterior.", q:"Wiener Christkindlmarkt Rathausplatz Wien"},
-    {id:"prater", n:"Wintermarkt del Prater", d:"Bajo la noria gigante, con más comida, bebida y entretenimiento que artesanía.", when:"Lunes 23 · 18:15", hours:"Hasta el 6 ene 2027. No he encontrado el horario diario: confirmadlo.", best:"A las 17:15 subís a la noria con el atardecer ya cerrado, y el mercadillo luce más con la luz de la noche. Entre semana suele haber menos gente que el fin de semana.", q:"Wintermarkt Prater Wien"}
+    {id:"prater", n:"Wintermarkt del Prater", d:"Bajo la noria gigante, con más comida, bebida y entretenimiento que artesanía.", when:"Lunes 23 · 18:15", hours:"20 nov 2026–6 ene 2027. Lun–vie 12:00–22:00; sáb, dom y festivos 11:00–22:00.", best:"A las 17:15 subís a la noria con el atardecer ya cerrado, y el mercadillo luce más con la luz de la noche. Entre semana suele haber menos gente que el fin de semana.", q:"Wintermarkt Prater Wien"},
+    {id:"karl", n:"Art Advent Karlsplatz", d:"El mejor para niños: paisaje de paja para jugar, tren de draisinas, carrusel hecho con objetos encontrados, organillo y cuentacuentos en la carpa Sky Tent. Toda la comida es ecológica certificada.", when:"Opcional · niños", hours:"13 nov–23 dic. Las fuentes dan 10:00–22:00 o 12:00–20:00 (comida hasta 21:00): confirmadlo en artadvent.at.", best:"Por la mañana o a primera hora de la tarde, antes del pico de 17:00. Delante de la Karlskirche, a unos 15 min a pie de casa.", q:"Art Advent Karlsplatz Wien"},
+    {id:"akh", n:"Campus Universidad (Altes AKH)", d:"Mercadillo en los patios del antiguo hospital, con tren infantil, carrusel antiguo y pistas de curling. Más tranquilo que Rathausplatz.", when:"Opcional · niños", hours:"Horario 2026: confirmadlo en weihnachtsdorf.at.", best:"Buena alternativa si Rathausplatz está a tope: a unos 10 min a pie desde allí.", q:"Weihnachtsdorf Altes AKH Wien"}
+  ];
+  /* Mapa: cafés, mercadillos y eventos del fin de semana (21–22 nov) */
+  var HOMEPOS = [48.2017,16.3527];
+  var CATS = {
+    cafe:{n:"Cafés", c:"#8a5a2b"},
+    mercado:{n:"Mercadillos", c:"#b3263b"},
+    evento:{n:"Eventos", c:"#3f5fd6"}
+  };
+  var POIS = [
+    {cat:"cafe", n:"Café im Kunsthistorischen Museum", ll:[48.2039,16.3615], d:"Bajo la cúpula del museo (el del vídeo). Hace falta entrada al museo.", h:"Todos los días 10:00–17:30; jueves también 18:00–22:00.", q:"Café im Kunsthistorischen Museum Wien"},
+    {cat:"cafe", n:"Café Central", ll:[48.2104,16.3654], d:"El más icónico, en un palacio. Cola casi segura: id a primera hora.", h:"Confirmad el horario.", q:"Café Central Herrengasse 14 Wien"},
+    {cat:"cafe", n:"Demel", ll:[48.2086,16.3672], d:"Pastelería imperial desde 1786. Pedid el Kaiserschmarrn.", h:"Todos los días 10:00–19:00.", q:"Demel Kohlmarkt 14 Wien"},
+    {cat:"cafe", n:"Café Hawelka", ll:[48.2079,16.3698], d:"Bohemio, de artistas. Por la tarde-noche, Buchteln recién hechas.", h:"Lun–jue 9:00–24:00, vie–sáb hasta 1:00, dom 10:00–21:00.", q:"Café Hawelka Dorotheergasse 6 Wien"},
+    {cat:"cafe", n:"Café Landtmann", ll:[48.2115,16.3615], d:"Elegante, junto al Burgtheater y cerca de Rathausplatz.", h:"Lun–sáb 7:30–24:00, dom hasta 22:00.", q:"Café Landtmann Universitätsring 4 Wien"},
+    {cat:"cafe", n:"Café Sperl", ll:[48.1998,16.3611], d:"Auténtico y menos turístico, cerca del Naschmarkt. Ideal para desayunar.", h:"Lun–sáb 7:00–22:00, dom 10:00–20:00.", q:"Café Sperl Gumpendorfer Str. 11 Wien"},
+    {cat:"cafe", n:"Café Prückel", ll:[48.2076,16.3804], d:"Años 50, luminoso, frente al Stadtpark. Más tranquilo.", h:"Todos los días 8:30–22:00.", q:"Café Prückel Stubenring 24 Wien"},
+    {cat:"cafe", n:"Café Mozart", ll:[48.2043,16.3690], d:"Detrás de la Ópera. Ya está en el plan del domingo a las 17:00.", h:"Todos los días 8:00–23:30.", q:"Café Mozart Albertinaplatz 2 Wien"},
+    {cat:"mercado", n:"Spittelberg", ll:[48.2034,16.3556], d:"El más cercano a casa. En el plan: sábado 19:15.", h:"Lun–vie desde 14:00, sáb y dom desde 11:00, hasta 21:30.", q:"Spittelberg Weihnachtsmarkt Wien"},
+    {cat:"mercado", n:"Schönbrunn", ll:[48.1858,16.3125], d:"En el plan: sábado 13:00.", h:"Todos los días 10:00–21:00.", q:"Weihnachtsmarkt Schönbrunn Wien"},
+    {cat:"mercado", n:"Belvedere", ll:[48.1916,16.3808], d:"En el plan: domingo 9:30.", h:"Sáb y dom 10:00–22:00.", q:"Weihnachtsmarkt Belvedere Wien"},
+    {cat:"mercado", n:"Am Hof", ll:[48.2105,16.3678], d:"Mucha comida. En el plan: domingo 18:25.", h:"Vie–dom 10:00–21:00.", q:"Weihnachtsmarkt Am Hof Wien"},
+    {cat:"mercado", n:"Freyung", ll:[48.2116,16.3652], d:"Mercadillo tradicional vienés, junto a Am Hof.", h:"Todos los días 10:00–21:00.", q:"Altwiener Christkindlmarkt Freyung Wien"},
+    {cat:"mercado", n:"Rathausplatz", ll:[48.2107,16.3579], d:"El gran mercadillo: tiovivo de 12 m, tren de renos, pista de patinaje infantil y taller de galletas y velas dentro del Ayuntamiento. En el plan: domingo 19:30.", h:"Todos los días 10:00–22:00.", q:"Wiener Christkindlmarkt Rathausplatz Wien"},
+    {cat:"mercado", n:"Art Advent Karlsplatz", ll:[48.2003,16.3713], d:"El mejor para niños: paja para jugar, draisinas, carrusel y cuentacuentos.", h:"10:00–22:00 o 12:00–20:00 según la fuente: confirmadlo.", q:"Art Advent Karlsplatz Wien"},
+    {cat:"mercado", n:"Campus Altes AKH", ll:[48.2153,16.3543], d:"Tren infantil y carrusel antiguo, más tranquilo.", h:"Confirmad el horario.", q:"Weihnachtsdorf Altes AKH Wien"},
+    {cat:"mercado", n:"Maria-Theresien-Platz", ll:[48.2047,16.3603], d:"Entre los dos museos, justo al salir del Café del KHM.", h:"Sáb y dom 10:00–21:00.", q:"Weihnachtsdorf Maria-Theresien-Platz Wien"},
+    {cat:"mercado", n:"Wintermarkt del Prater", ll:[48.2166,16.3958], d:"Bajo la noria. En el plan: lunes 18:15.", h:"Sáb y dom 11:00–22:00; lun–vie 12:00–22:00.", q:"Wintermarkt Riesenradplatz Wien"},
+    {cat:"evento", n:"Light of Creation · Votivkirche", ll:[48.2154,16.3590], d:"Espectáculo inmersivo de luz y música de 30 min dentro de la iglesia. Con niños, mejor el pase de las 20:00. Comprad entrada antes.", h:"Pases nocturnos (p. ej. 20:00, 21:00, 22:30). Unos 34–42 $.", q:"Votivkirche Wien", when:"Sáb y dom · noche"},
+    {cat:"evento", n:"Imperial Lights · Schönbrunn", ll:[48.1838,16.3118], d:"Recorrido de luces por los jardines del palacio. Ya está en el plan del sábado.", h:"Al anochecer. Confirmad horario y entradas.", q:"Schönbrunn Palace Gardens Wien", when:"Sáb 21 · 17:00"},
+    {cat:"evento", n:"Christmas Magic · Schwarzenbergplatz", ll:[48.2001,16.3752], d:"Mercadillo nuevo este año, con 48 puestos, espectáculo de luces y música en directo de viernes a domingo.", h:"13 nov–26 dic. Horario detallado: confirmadlo en weihnachtsmarkt.at.", q:"Schwarzenbergplatz Wien", when:"Sáb y dom · música en directo"},
+    {cat:"evento", n:"Iluminación del Graben y Stephansplatz", ll:[48.2086,16.3712], d:"Las calles del centro con luces navideñas. En el plan del domingo a las 17:45.", h:"Desde el anochecer (hacia las 16:15).", q:"Graben Wien", when:"Dom 22 · 17:45"}
   ];
   var SHOPS = [
     {id:"spar", n:"SPAR Gourmet", a:"Neubaugasse 25", m:5, tag:"Compra principal", d:"Frescos, platos preparados, productos vegetales y básicos de desayuno."},
@@ -421,7 +483,7 @@ footer a{color:var(--muted)}
   })();
 
   /* ---------- Pestañas ---------- */
-  var TABS = [["plan","Plan"],["mercados","Mercados"],["tiendas","Tiendas"],["comer","Comer"],["lista","Lista"]];
+  var TABS = [["plan","Plan"],["mapa","Mapa"],["mercados","Mercados"],["tiendas","Tiendas"],["comer","Comer"],["lista","Lista"]];
   var tabBox = document.getElementById("tabs");
   TABS.forEach(function(t){
     var b = el("button","", I["tab_"+t[0]] + "<span>"+t[1]+"</span>");
@@ -437,6 +499,7 @@ footer a{color:var(--muted)}
       document.getElementById("tab-"+t).setAttribute("aria-selected", t===name ? "true":"false");
     });
     try{ history.replaceState(null,"","#"+name); }catch(e){}
+    if(name==="mapa") initMap();
     var nav = document.querySelector("nav");
     if(window.scrollY > nav.offsetTop) window.scrollTo(0, nav.offsetTop);
   }
@@ -484,7 +547,7 @@ footer a{color:var(--muted)}
   }
 
   /* ---------- Mercados ---------- */
-  var MPHOTO = {spit:"spittelX",schon:"schonX",belv:"belvX",luces:"stephans",hof:"freyung",rathaus:"rathaus",prater:"wintermarkt"};
+  var MPHOTO = {spit:"spittelX",schon:"schonX",belv:"belvX",luces:"stephans",hof:"freyung",rathaus:"rathaus",prater:"wintermarkt",karl:"karlskirche",akh:null};
   var seen = store("viena-seen") || {};
   function renderMarkets(){
     var box = document.getElementById("marketList"); box.innerHTML="";
@@ -585,6 +648,71 @@ footer a{color:var(--muted)}
     document.getElementById("barFill").style.width = (total? (100*done/total):0) + "%";
   }
   document.getElementById("reset").addEventListener("click", function(){ checked={}; store("viena-list", checked); renderList(); });
+
+  /* ---------- Mapa ---------- */
+  var map=null, layers={}, markers=[], filter="all";
+  function popupHtml(p){
+    return "<b>"+p.n+"</b><br>"+(p.when?"<i>"+p.when+"</i><br>":"")+p.d+"<br><small>"+p.h+"</small><br><a href=\""+dir(p.q)+"\" target=\"_blank\" rel=\"noopener\">Cómo llegar a pie →</a>";
+  }
+  function initMap(){
+    var box = document.getElementById("map");
+    if(map){ setTimeout(function(){ map.invalidateSize(); },60); return; }
+    if(!window.L){ box.innerHTML='<p class="note" style="padding:16px">El mapa necesita conexión a internet. Abajo tenéis la lista con enlaces a Google Maps.</p>'; return; }
+    map = L.map(box,{zoomControl:true, scrollWheelZoom:false}).setView([48.205,16.362],13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    Object.keys(CATS).forEach(function(k){ layers[k]=L.layerGroup().addTo(map); });
+    POIS.forEach(function(p,i){
+      var m = L.circleMarker(p.ll,{radius:8, color:"#fff", weight:2, fillColor:CATS[p.cat].c, fillOpacity:1}).bindPopup(popupHtml(p));
+      m.addTo(layers[p.cat]); markers[i]=m;
+    });
+    L.circleMarker(HOMEPOS,{radius:9,color:"#fff",weight:3,fillColor:"#1a1a24",fillOpacity:1}).addTo(map).bindPopup("<b>Casa</b><br>"+HOME);
+    if(navigator.geolocation){
+      var me=null;
+      navigator.geolocation.watchPosition(function(pos){
+        var ll=[pos.coords.latitude,pos.coords.longitude];
+        if(!me){ me=L.circleMarker(ll,{radius:7,color:"#fff",weight:3,fillColor:"#2b7cff",fillOpacity:1}).addTo(map).bindPopup("Estás aquí"); }
+        else me.setLatLng(ll);
+      },function(){}, {enableHighAccuracy:true, maximumAge:30000});
+    }
+    applyFilter();
+    setTimeout(function(){ map.invalidateSize(); },60);
+  }
+  function applyFilter(){
+    if(map){
+      Object.keys(layers).forEach(function(k){ if(filter==="all"||filter===k){ if(!map.hasLayer(layers[k])) layers[k].addTo(map); } else map.removeLayer(layers[k]); });
+      var pts = POIS.filter(function(p){return filter==="all"||p.cat===filter;}).map(function(p){return p.ll;});
+      if(pts.length) map.fitBounds(pts.concat([HOMEPOS]),{padding:[24,24], maxZoom:15});
+    }
+    renderFilters(); renderPois();
+  }
+  function renderFilters(){
+    var box=document.getElementById("mapFilters"); box.innerHTML="";
+    [["all","Todo",null]].concat(Object.keys(CATS).map(function(k){return [k,CATS[k].n,CATS[k].c];})).forEach(function(f){
+      var b=el("button","", (f[2]?'<span class="dot" style="background:'+f[2]+'"></span>':"")+f[1]);
+      b.type="button"; b.setAttribute("aria-pressed", filter===f[0]?"true":"false");
+      b.addEventListener("click", function(){ filter=f[0]; applyFilter(); });
+      box.appendChild(b);
+    });
+  }
+  function renderPois(){
+    var box=document.getElementById("poiList"); box.innerHTML="";
+    POIS.forEach(function(p,i){
+      if(filter!=="all" && p.cat!==filter) return;
+      var c=el("article","poi");
+      var top=el("div","top"); top.appendChild(el("span","dot")).style.background=CATS[p.cat].c;
+      top.appendChild(el("h3","",p.n)); top.appendChild(el("span","kind",CATS[p.cat].n.replace(/s$/,"").replace("Mercadillo","Mercado").replace("Evento","Evento")));
+      c.appendChild(top);
+      if(p.when){ var ch=el("div","chips"); ch.appendChild(el("span","chip gold",p.when)); c.appendChild(ch); }
+      c.appendChild(el("div","d",p.d));
+      c.appendChild(el("div","hrs",I.clock.replace('<svg','<svg style="width:14px;height:14px;vertical-align:-2px;color:var(--gold)"')+" "+p.h));
+      var act=el("div","actions");
+      var a=el("a","go sm",I.pin+"Cómo llegar"); a.href=dir(p.q); a.target="_blank"; a.rel="noopener"; act.appendChild(a);
+      var v=el("button","ghost","Ver en el mapa"); v.type="button";
+      v.addEventListener("click", function(){ if(!map) return; map.setView(p.ll,16); markers[i].openPopup(); document.getElementById("map").scrollIntoView({behavior:"smooth",block:"center"}); });
+      act.appendChild(v); c.appendChild(act); box.appendChild(c);
+    });
+  }
+  renderFilters(); renderPois();
 
   renderDay(); renderMarkets(); renderShops(); renderEats(); renderList();
   var h = (location.hash||"").replace("#","");
