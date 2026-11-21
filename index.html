@@ -328,6 +328,7 @@ footer a{color:var(--muted)}
     var t = (text||"").toLowerCase();
     if(t.indexOf("aeropuerto")>=0) return ["airport","plane","blue"];
     if(t.indexOf("boku")>=0) return ["boku","laptop","pine"];
+    if(t.indexOf("naturhistorisch")>=0) return [null,"star","gold"];
     if(t.indexOf("tiergarten")>=0||t.indexOf("zoo")>=0) return ["panda","star","pine"];
     if(t.indexOf("imperial lights")>=0||t.indexOf("palace gardens")>=0) return ["imperial","star","gold"];
     if(t.indexOf("weihnachtsmarkt schönbrunn")>=0) return ["schonX","tree","red"];
@@ -366,9 +367,10 @@ footer a{color:var(--muted)}
       {t:"Noche", n:"Taxi o Uber al apartamento", d:"Pedid el viaje al salir de la terminal. Dirección: Mondscheingasse 16, 1070 Wien", q:HOME},
       {t:"Noche", n:"Check-in y a dormir", d:"Sin compra hoy: el sábado desayunáis fuera"}
     ]},
-    {id:"sab", label:"Sáb 21", theme:"Schönbrunn y Spittelberg", note:"Jornada intensa pero cómoda, noche flexible. Haced la compra grande en el descanso de la tarde: mañana las tiendas cierran.", items:[
+    {id:"sab", label:"Sáb 21", theme:"Historia Natural, Schönbrunn y Spittelberg", note:"Jornada intensa pero cómoda, noche flexible. Haced la compra grande en el descanso de la tarde: mañana las tiendas cierran.", items:[
       {t:"Antes de las 9", n:"Desayuno en Joseph Brot", d:"La nevera está vacía. Kirchengasse 3, a 4 min a pie. Confirmad el horario de apertura.", q:"Joseph Brot Kirchengasse 3, 1070 Wien", shop:1},
-      {t:"09:00–11:15", n:"Zoo de Schönbrunn", q:"Tiergarten Schönbrunn Wien"},
+      {t:"09:00–11:00", n:"Museo de Historia Natural (Naturhistorisches Museum)", d:"Abre a las 9:00, a unos 15 min a pie de casa. Dinosaurios, meteoritos y la Venus de Willendorf. Adultos 18 €, menores de 19 gratis. Las salas 27–29 están cerradas.", q:"Naturhistorisches Museum Wien Maria-Theresien-Platz"},
+      {t:"11:00–11:40", n:"Traslado a Schönbrunn", d:"Metro U4 hasta la parada Schönbrunn (unos 25–30 min) o taxi (unos 15 min)."},
       {t:"11:45–13:00", n:"Interior del Palacio de Schönbrunn", d:"Residencia de Sisi", q:"Schloss Schönbrunn Wien"},
       {t:"13:00–14:30", n:"Mercadillo de Schönbrunn + comida", q:"Weihnachtsmarkt Schönbrunn Wien"},
       {t:"14:30–15:30", n:"Compra grande en SPAR Gourmet o Lidl", d:"Desayunos y cenas de domingo a martes. Lidl cierra el sábado hacia las 18:00: comprobad la hora.", q:"SPAR Gourmet Neubaugasse 25, 1070 Wien", shop:1},
