@@ -39,9 +39,9 @@ h1 em{font-style:italic;font-weight:500;color:#ffd98a}
 
 /* Tabs */
 nav{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-nav .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:3px;padding:8px 8px}
-nav button{font:inherit;font-weight:700;font-size:12px;padding:8px 1px 7px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
-nav button svg{width:22px;height:22px}
+nav .in{max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:7px 6px}
+nav button{font:inherit;font-weight:700;font-size:11px;letter-spacing:-.01em;padding:7px 0 6px;border:0;border-radius:12px;background:transparent;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button svg{width:21px;height:21px}
 nav button[aria-selected="true"]{background:var(--ink);color:#fff}
 
 main{max-width:760px;margin:0 auto;padding:18px 16px 48px;display:flex;flex-direction:column;gap:14px}
@@ -185,10 +185,17 @@ footer a{color:var(--muted)}
 
   <section id="mapa" role="tabpanel" aria-labelledby="tab-mapa" hidden>
     <h2>Mapa del finde</h2>
-    <p class="note">Cafés clásicos, mercadillos y eventos del 21–22 nov. Toca un punto para ver detalles y la ruta a pie.</p>
+    <p class="note">Cafés clásicos, mercadillos, eventos del 21–22 nov y sitios gratis. Toca un punto para ver detalles y la ruta a pie.</p>
     <div class="filters" id="mapFilters"></div>
     <div id="map" role="region" aria-label="Mapa de Viena"></div>
     <div id="poiList" style="display:flex;flex-direction:column;gap:10px"></div>
+  </section>
+
+  <section id="gratis" role="tabpanel" aria-labelledby="tab-gratis" hidden>
+    <h2>Imprescindibles gratis</h2>
+    <p class="note">Entrada libre (o visita guiada gratuita). Ordenados por el día que mejor os encaja. Comprobad horarios antes de ir.</p>
+    <div class="tip red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><path d="M12 10v5M12 18h.01"/></svg><div><b>Ojo con los días.</b> El Palacio de Justicia cierra sábados y domingos: solo lunes 23 o martes 24. El Parlamento abre el sábado pero cierra el domingo. Para ambos hace falta DNI o pasaporte y pasar control de seguridad.</div></div>
+    <div id="freeList" style="display:flex;flex-direction:column;gap:14px"></div>
   </section>
 
   <section id="tiendas" role="tabpanel" aria-labelledby="tab-tiendas" hidden>
@@ -253,6 +260,7 @@ footer a{color:var(--muted)}
     tab_plan:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
     tab_mercados:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 5 4h14l2 6"/><path d="M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M5 12v8h14v-8"/></svg>',
     tab_mapa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
+    tab_gratis:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9"/><rect x="2" y="7" width="20" height="5" rx="1"/><path d="M12 21V7M12 7H8a2.5 2.5 0 0 1 0-5c3 0 4 5 4 5zM12 7h4a2.5 2.5 0 0 0 0-5c-3 0-4 5-4 5z"/></svg>',
     tab_tiendas:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h10.8L21 7H6.3"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg>',
     tab_comer:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 2-3 5-3 8h4V3zM18 11v10"/></svg>',
     tab_lista:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h11M9 12h11M9 18h11"/><path d="m3 6 1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2"/></svg>'
@@ -413,12 +421,32 @@ footer a{color:var(--muted)}
     {id:"karl", n:"Art Advent Karlsplatz", d:"El mejor para niños: paisaje de paja para jugar, tren de draisinas, carrusel hecho con objetos encontrados, organillo y cuentacuentos en la carpa Sky Tent. Toda la comida es ecológica certificada.", when:"Opcional · niños", hours:"13 nov–23 dic. Las fuentes dan 10:00–22:00 o 12:00–20:00 (comida hasta 21:00): confirmadlo en artadvent.at.", best:"Por la mañana o a primera hora de la tarde, antes del pico de 17:00. Delante de la Karlskirche, a unos 15 min a pie de casa.", q:"Art Advent Karlsplatz Wien"},
     {id:"akh", n:"Campus Universidad (Altes AKH)", d:"Mercadillo en los patios del antiguo hospital, con tren infantil, carrusel antiguo y pistas de curling. Más tranquilo que Rathausplatz.", when:"Opcional · niños", hours:"Horario 2026: confirmadlo en weihnachtsdorf.at.", best:"Buena alternativa si Rathausplatz está a tope: a unos 10 min a pie desde allí.", q:"Weihnachtsdorf Altes AKH Wien"}
   ];
+  /* Imprescindibles gratis */
+  var GRATIS = [
+    {n:"Catedral de San Esteban (Stephansdom)", ll:[48.2085,16.3731], ph:"stephans", when:"Sáb, dom o lun", d:"El símbolo de Viena. La zona de entrada y el vestíbulo son de acceso libre; desde ahí se ve la nave. La nave completa, las torres y las catacumbas son de pago.", h:"Abre todos los días; durante las misas se restringen las visitas.", tip:"Pasad el domingo a las 17:45, cuando vais al Graben: el tejado de colores y la plaza iluminada lucen mucho de noche.", q:"Stephansdom Wien"},
+    {n:"Iglesia de San Pedro (Peterskirche)", ll:[48.2094,16.3700], ph:null, when:"Dom 22 · 15:00", d:"Iglesia barroca espectacular a dos pasos del Graben, mucho menos llena que la catedral. Entrada libre.", h:"Lun–vie 8:00–19:00; sáb, dom y festivos 9:00–19:00.", tip:"«Orgel um Drei»: concierto de órgano gratis casi todos los días a las 15:00. Confirmad el programa en la puerta.", q:"Peterskirche Wien"},
+    {n:"Parlamento", ll:[48.2081,16.3584], ph:null, when:"Sáb 21 o lun 23 (mañana)", d:"Edificio de la Ringstrasse renovado, con el Demokratikum: estaciones interactivas y, para niños, un pasaporte de sellos y estaciones marcadas en amarillo. Las visitas guiadas son gratis, de lunes a sábado, con reserva online.", h:"Lun 8:00–13:00; mar, mié y vie 8:00–18:00; jue 8:00–21:00; sáb 9:00–17:00 (último acceso 16:00). Domingo cerrado.", tip:"Hace falta documento con foto. Está junto a Rathausplatz.", q:"Parlament Dr.-Karl-Renner-Ring 3 Wien"},
+    {n:"Palacio de Justicia (Justizpalast)", ll:[48.2064,16.3572], ph:null, when:"Lun 23 o mar 24", d:"Un vestíbulo neorrenacentista enorme con la estatua de la Justicia, y en la azotea una cafetería con vistas sobre Viena abierta al público. Gratis; solo se visita la Aula y el café.", h:"Visitas lun–vie 9:30–15:30. Sábados, domingos y festivos cerrado. Café en la azotea, aprox. 8:00–16:00.", tip:"Control de seguridad tipo aeropuerto: llevad poco equipaje y documento.", q:"Justizpalast Schmerlingplatz 11 Wien"},
+    {n:"Ayuntamiento (Rathaus): visita guiada", ll:[48.2109,16.3574], ph:"rathaus", when:"Lun 23 · 13:00", d:"Visita gratuita a los salones del Ayuntamiento. Es en alemán, con audioguía gratis en español. Máximo 50 personas.", h:"Lun, mié y vie a las 13:00. Inscripción online obligatoria en wien.gv.at. Punto de encuentro: Stadtinformation, Friedrich-Schmidt-Platz 1.", tip:"El lunes coincide con el fin del trabajo en BOKU: solo si os encaja.", q:"Stadtinformation Rathaus Friedrich-Schmidt-Platz 1 Wien"},
+    {n:"Wien Museum Karlsplatz", ll:[48.1996,16.3717], ph:null, when:"Sáb 21 o dom 22", d:"La historia de Viena en tres plantas, con la ballena Poldi del Prater, una maqueta del Stephansdom de 5,5 m y cuadros de Klimt. La exposición permanente es gratis para todos; las temporales, gratis para menores de 19.", h:"Mar–dom 9:00–18:00. Lunes cerrado.", tip:"Combinadlo con el mercadillo infantil de Karlsplatz, justo enfrente.", q:"Wien Museum Karlsplatz 8 Wien"},
+    {n:"Hofburg: Heldenplatz y Michaelerplatz", ll:[48.2066,16.3655], ph:"michaeler", when:"Dom 22 (en el plan)", d:"Patios y plazas del palacio imperial, al aire libre y gratis. En Michaelerplatz se ven restos romanos excavados.", h:"Al aire libre, siempre abierto.", tip:"Ya pasáis por aquí el domingo después de la Biblioteca Nacional.", q:"Michaelerplatz Wien"},
+    {n:"Iglesia de San Miguel (Michaelerkirche)", ll:[48.2083,16.3670], ph:null, when:"Dom 22", d:"Justo enfrente de la entrada de la Hofburg. La iglesia es gratis; la cripta se visita con guía de pago.", h:"Abre a diario; confirmad el horario.", tip:"Dos minutos desde Michaelerplatz.", q:"Michaelerkirche Wien"},
+    {n:"Iglesia de los Agustinos (Augustinerkirche)", ll:[48.2052,16.3680], ph:null, when:"Dom 22 · mañana", d:"Iglesia gótica de la corte, donde se casó Sisi. Los domingos y festivos la misa mayor tiene música.", h:"Entrada libre fuera de las celebraciones. Confirmad la hora de la misa con música.", tip:"Está en Josefsplatz, pegada a la Biblioteca Nacional.", q:"Augustinerkirche Wien"},
+    {n:"Jardines de Schönbrunn y Gloriette", ll:[48.1785,16.3088], ph:"schon", when:"Sáb 21 (en el plan)", d:"Los jardines del palacio son gratis. Subid a la Gloriette para la mejor vista del palacio con Viena al fondo.", h:"Abren temprano y cierran al anochecer; confirmad la hora de cierre en invierno.", tip:"La subida a la Gloriette lleva unos 15–20 min a pie: con carrito, por los caminos laterales en zigzag.", q:"Gloriette Schönbrunn Wien"},
+    {n:"Jardines del Belvedere", ll:[48.1933,16.3790], ph:"belvWinter", when:"Dom 22 (en el plan)", d:"Jardín barroco entre el Belvedere Superior y el Inferior. Pasear y hacer fotos es gratis; los museos son de pago.", h:"Abierto de día.", tip:"La foto clásica es desde lo alto del jardín mirando al Belvedere Superior reflejado en el estanque.", q:"Belvedere Garten Wien"},
+    {n:"Reloj Ankeruhr (Hoher Markt)", ll:[48.2112,16.3740], ph:null, when:"Dom 22 · 12:00", d:"Reloj modernista en un puente entre dos edificios: cada hora pasa una figura histórica, y a mediodía desfilan todas con música.", h:"Desfile completo a las 12:00.", tip:"A 5 min de Stephansplatz. Si no cuadra a mediodía, cualquier hora en punto sirve.", q:"Ankeruhr Hoher Markt Wien"},
+    {n:"Naschmarkt y mercadillo de pulgas", ll:[48.1981,16.3615], ph:null, when:"Sáb 21 · mañana", d:"El mercado más famoso de Viena. Los sábados por la mañana hay además mercadillo de antigüedades en el extremo de Kettenbrückengasse.", h:"Mercado lun–sáb; domingo cerrado. El mercadillo de pulgas, solo sábados desde primera hora.", tip:"A 10 min a pie de casa y junto al Café Sperl.", q:"Naschmarkt Kettenbrückengasse Wien"},
+    {n:"Hundertwasserhaus", ll:[48.2073,16.3943], ph:null, when:"Lun 23 (camino al Prater)", d:"Viviendas de colores con árboles en los balcones y suelos ondulados. Por fuera es gratis; el Hundertwasser Village de enfrente también tiene entrada libre.", h:"Exterior siempre visible.", tip:"Está a 20 min a pie o 2 paradas de tranvía del Prater.", q:"Hundertwasserhaus Kegelgasse 36 Wien"},
+    {n:"Stadtpark: Johann Strauss dorado", ll:[48.2047,16.3791], ph:null, when:"Cualquier día", d:"La estatua más fotografiada de Viena, en un parque junto al Ring.", h:"Parque abierto.", tip:"Enfrente está el Café Prückel.", q:"Johann Strauss Denkmal Stadtpark Wien"},
+    {n:"MUSA (arte contemporáneo)", ll:[48.2113,16.3561], ph:null, when:"Sáb 21 o dom 22", d:"Colección de arte contemporáneo de la ciudad, entrada libre. Pequeño y tranquilo, detrás del Ayuntamiento.", h:"Mar–dom 10:00–18:00.", tip:"Buen refugio si hace frío antes de Rathausplatz.", q:"MUSA Felderstraße 6-8 Wien"}
+  ];
   /* Mapa: cafés, mercadillos y eventos del fin de semana (21–22 nov) */
   var HOMEPOS = [48.2017,16.3527];
   var CATS = {
     cafe:{n:"Cafés", c:"#8a5a2b"},
     mercado:{n:"Mercadillos", c:"#b3263b"},
-    evento:{n:"Eventos", c:"#3f5fd6"}
+    evento:{n:"Eventos", c:"#3f5fd6"},
+    gratis:{n:"Gratis", c:"#1f7a5c"}
   };
   var POIS = [
     {cat:"cafe", n:"Café im Kunsthistorischen Museum", ll:[48.2039,16.3615], d:"Bajo la cúpula del museo (el del vídeo). Hace falta entrada al museo.", h:"Todos los días 10:00–17:30; jueves también 18:00–22:00.", q:"Café im Kunsthistorischen Museum Wien"},
@@ -444,6 +472,7 @@ footer a{color:var(--muted)}
     {cat:"evento", n:"Christmas Magic · Schwarzenbergplatz", ll:[48.2001,16.3752], d:"Mercadillo nuevo este año, con 48 puestos, espectáculo de luces y música en directo de viernes a domingo.", h:"13 nov–26 dic. Horario detallado: confirmadlo en weihnachtsmarkt.at.", q:"Schwarzenbergplatz Wien", when:"Sáb y dom · música en directo"},
     {cat:"evento", n:"Iluminación del Graben y Stephansplatz", ll:[48.2086,16.3712], d:"Las calles del centro con luces navideñas. En el plan del domingo a las 17:45.", h:"Desde el anochecer (hacia las 16:15).", q:"Graben Wien", when:"Dom 22 · 17:45"}
   ];
+  GRATIS.forEach(function(g){ POIS.push({cat:"gratis", n:g.n, ll:g.ll, d:g.d, h:g.h, q:g.q, when:g.when}); });
   var SHOPS = [
     {id:"spar", n:"SPAR Gourmet", a:"Neubaugasse 25", m:5, tag:"Compra principal", d:"Frescos, platos preparados, productos vegetales y básicos de desayuno."},
     {id:"lidl", n:"Lidl", a:"Zieglergasse 8", m:7, tag:"Compra económica", d:"Supermercado económico cerca de Neubaugasse. Lun–vie 07:40–20:00 y sáb 07:40–18:00 según una ficha de horarios; domingo cerrado. Confirmad el horario.", warn:1},
@@ -483,7 +512,7 @@ footer a{color:var(--muted)}
   })();
 
   /* ---------- Pestañas ---------- */
-  var TABS = [["plan","Plan"],["mapa","Mapa"],["mercados","Mercados"],["tiendas","Tiendas"],["comer","Comer"],["lista","Lista"]];
+  var TABS = [["plan","Plan"],["mapa","Mapa"],["gratis","Gratis"],["mercados","Mercados"],["tiendas","Tiendas"],["comer","Comer"],["lista","Lista"]];
   var tabBox = document.getElementById("tabs");
   TABS.forEach(function(t){
     var b = el("button","", I["tab_"+t[0]] + "<span>"+t[1]+"</span>");
@@ -713,6 +742,33 @@ footer a{color:var(--muted)}
     });
   }
   renderFilters(); renderPois();
+
+  /* ---------- Gratis ---------- */
+  function renderFree(){
+    var box=document.getElementById("freeList"); box.innerHTML="";
+    GRATIS.forEach(function(g){
+      var c=el("article","card");
+      c.appendChild(ph(g.ph?PHOTO[g.ph]:null,"star","pine",g.when));
+      var b=el("div","body");
+      b.appendChild(el("h3","",g.n));
+      var ch=el("div","chips"); ch.appendChild(el("span","chip gold","Gratis")); b.appendChild(ch);
+      b.appendChild(el("div","desc",g.d));
+      var f=el("div","facts");
+      f.appendChild(el("div","fact",I.clock+"<div><b>Horario. </b><span>"+g.h+"</span></div>"));
+      f.appendChild(el("div","fact best",I.star+"<div><b>Consejo. </b><span>"+g.tip+"</span></div>"));
+      b.appendChild(f);
+      var act=el("div","actions");
+      var a=el("a","go",I.pin+"Cómo llegar"); a.href=dir(g.q); a.target="_blank"; a.rel="noopener"; act.appendChild(a);
+      var v=el("button","ghost","Ver en el mapa"); v.type="button";
+      v.addEventListener("click",function(){
+        showTab("mapa"); filter="gratis"; applyFilter();
+        var i=-1; POIS.forEach(function(p,k){ if(p.cat==="gratis"&&p.n===g.n) i=k; });
+        setTimeout(function(){ if(map&&i>=0){ map.setView(g.ll,16); markers[i].openPopup(); } },150);
+      });
+      act.appendChild(v); b.appendChild(act); c.appendChild(b); box.appendChild(c);
+    });
+  }
+  renderFree();
 
   renderDay(); renderMarkets(); renderShops(); renderEats(); renderList();
   var h = (location.hash||"").replace("#","");
