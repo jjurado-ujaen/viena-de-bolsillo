@@ -336,6 +336,11 @@ footer a{color:var(--muted)}
     kirchengasse:"Kirchengasse Wien 2022-08-08 01.jpg",
     boku:"Gregor Mendel Haus Detail 3.jpg",
     karlskirche:"Karlskirche Wien.jpg",
+    nhm:"Wien - Naturhistorisches Museum (1).JPG",
+    kinsky:"Wien, Palais Daun-Kinsky.JPG",
+    kinskyIn:"Palais Kinsky Vienna June 2006 073.jpg",
+    peters:"Wien - Peterskirche, Innenansicht.JPG",
+    parlament:"Wien - Parlamentsgebäude.JPG",
     cKHM:"Café-Restaurant im Kunsthistorischen Museum 2.jpg",
     cCentral:"Wien Cafe Central 2004.jpg",
     cDemel:"Café Demel, Vienna.jpg",
@@ -376,7 +381,13 @@ footer a{color:var(--muted)}
     var t = (text||"").toLowerCase();
     if(t.indexOf("aeropuerto")>=0) return ["airport","plane","blue"];
     if(t.indexOf("boku")>=0) return ["boku","laptop","pine"];
-    if(t.indexOf("naturhistorisch")>=0) return [null,"star","gold"];
+    if(t.indexOf("naturhistorisch")>=0) return ["nhm","star","gold"];
+    if(t.indexOf("kinsky")>=0) return [t.indexOf("por dentro")>=0?"kinskyIn":"kinsky","star","gold"];
+    if(t.indexOf("peterskirche")>=0) return ["peters","star","gold"];
+    if(t.indexOf("parlament")>=0) return ["parlament","star","blue"];
+    if(t.indexOf("ferstel")>=0) return ["cCentral","star","plum"];
+    if(t.indexOf("karlsplatz")>=0) return ["karlskirche","tree","red"];
+    if(t.indexOf("savoy")>=0) return ["cSavoy","cup","plum"];
     if(t.indexOf("tiergarten")>=0||t.indexOf("zoo")>=0) return ["panda","star","pine"];
     if(t.indexOf("imperial lights")>=0||t.indexOf("palace gardens")>=0) return ["imperial","star","gold"];
     if(t.indexOf("weihnachtsmarkt schönbrunn")>=0) return ["schonX","tree","red"];
@@ -391,6 +402,7 @@ footer a{color:var(--muted)}
     if(t.indexOf("graben")>=0) return ["stephans","star","gold"];
     if(t.indexOf("am hof")>=0) return ["freyung","tree","red"];
     if(t.indexOf("rathaus")>=0) return ["rathaus","tree","red"];
+    if(t.indexOf("freyung")>=0) return ["freyung","tree","red"];
     if(t.indexOf("riesenrad")>=0) return ["riesen","star","blue"];
     if(t.indexOf("wintermarkt")>=0) return ["wintermarkt","tree","blue"];
     if(t.indexOf("luftburg")>=0) return ["luftburg","fork","blue"];
@@ -489,14 +501,14 @@ footer a{color:var(--muted)}
   /* Imprescindibles gratis */
   var GRATIS = [
     {n:"Catedral de San Esteban (Stephansdom)", ll:[48.2085,16.3731], ph:"stephans", when:"Lun 23 · 16:05", d:"El símbolo de Viena. La zona de entrada y el vestíbulo son de acceso libre; desde ahí se ve la nave. La nave completa, las torres y las catacumbas son de pago.", h:"Abre todos los días; durante las misas se restringen las visitas.", tip:"En el plan del lunes a las 16:05, justo después de San Pedro. Al salir, la plaza ya está iluminada.", q:"Stephansdom Wien"},
-    {n:"Iglesia de San Pedro (Peterskirche)", ll:[48.2094,16.3700], ph:null, when:"Lun 23 · 15:35", d:"Iglesia barroca espectacular a dos pasos del Graben, mucho menos llena que la catedral. Entrada libre.", h:"Lun–vie 8:00–19:00; sáb, dom y festivos 9:00–19:00.", tip:"«Orgel um Drei»: concierto de órgano gratis casi todos los días a las 15:00. Confirmad el programa en la puerta.", q:"Peterskirche Wien"},
-    {n:"Parlamento", ll:[48.2081,16.3584], ph:null, when:"Lun 23 · 11:45 (familia)", d:"Edificio de la Ringstrasse renovado, con el Demokratikum: estaciones interactivas y, para niños, un pasaporte de sellos y estaciones marcadas en amarillo. Las visitas guiadas son gratis, de lunes a sábado, con reserva online.", h:"Lun 8:00–13:00; mar, mié y vie 8:00–18:00; jue 8:00–21:00; sáb 9:00–17:00 (último acceso 16:00). Domingo cerrado.", tip:"Hace falta documento con foto. Está junto a Rathausplatz.", q:"Parlament Dr.-Karl-Renner-Ring 3 Wien"},
+    {n:"Iglesia de San Pedro (Peterskirche)", ll:[48.2094,16.3700], ph:"peters", when:"Lun 23 · 15:35", d:"Iglesia barroca espectacular a dos pasos del Graben, mucho menos llena que la catedral. Entrada libre.", h:"Lun–vie 8:00–19:00; sáb, dom y festivos 9:00–19:00.", tip:"«Orgel um Drei»: concierto de órgano gratis casi todos los días a las 15:00. Confirmad el programa en la puerta.", q:"Peterskirche Wien"},
+    {n:"Parlamento", ll:[48.2081,16.3584], ph:"parlament", when:"Lun 23 · 11:45 (familia)", d:"Edificio de la Ringstrasse renovado, con el Demokratikum: estaciones interactivas y, para niños, un pasaporte de sellos y estaciones marcadas en amarillo. Las visitas guiadas son gratis, de lunes a sábado, con reserva online.", h:"Lun 8:00–13:00; mar, mié y vie 8:00–18:00; jue 8:00–21:00; sáb 9:00–17:00 (último acceso 16:00). Domingo cerrado.", tip:"Hace falta documento con foto. Está junto a Rathausplatz.", q:"Parlament Dr.-Karl-Renner-Ring 3 Wien"},
     {n:"Palacio de Justicia (Justizpalast)", ll:[48.2064,16.3572], ph:null, when:"Lun 23 o mar 24", d:"Un vestíbulo neorrenacentista enorme con la estatua de la Justicia, y en la azotea una cafetería con vistas sobre Viena abierta al público. Gratis; solo se visita la Aula y el café.", h:"Visitas lun–vie 9:30–15:30. Sábados, domingos y festivos cerrado. Café en la azotea, aprox. 8:00–16:00.", tip:"Control de seguridad tipo aeropuerto: llevad poco equipaje y documento.", q:"Justizpalast Schmerlingplatz 11 Wien"},
     {n:"Ayuntamiento (Rathaus): visita guiada", ll:[48.2109,16.3574], ph:"rathaus", when:"Lun 23 · 13:00", d:"Visita gratuita a los salones del Ayuntamiento. Es en alemán, con audioguía gratis en español. Máximo 50 personas.", h:"Lun, mié y vie a las 13:00. Inscripción online obligatoria en wien.gv.at. Punto de encuentro: Stadtinformation, Friedrich-Schmidt-Platz 1.", tip:"El lunes coincide con el fin del trabajo en BOKU: solo si os encaja.", q:"Stadtinformation Rathaus Friedrich-Schmidt-Platz 1 Wien"},
     {n:"Wien Museum Karlsplatz", ll:[48.1996,16.3717], ph:null, when:"Sáb 21 · con Karlsplatz", d:"La historia de Viena en tres plantas, con la ballena Poldi del Prater, una maqueta del Stephansdom de 5,5 m y cuadros de Klimt. La exposición permanente es gratis para todos; las temporales, gratis para menores de 19.", h:"Mar–dom 9:00–18:00. Lunes cerrado.", tip:"Combinadlo con el mercadillo infantil de Karlsplatz, justo enfrente.", q:"Wien Museum Karlsplatz 8 Wien"},
     {n:"Hofburg: Heldenplatz y Michaelerplatz", ll:[48.2066,16.3655], ph:"michaeler", when:"Dom 22 (en el plan)", d:"Patios y plazas del palacio imperial, al aire libre y gratis. En Michaelerplatz se ven restos romanos excavados.", h:"Al aire libre, siempre abierto.", tip:"Ya pasáis por aquí el domingo después de la Biblioteca Nacional.", q:"Michaelerplatz Wien"},
-    {n:"Pasaje Ferstel (Palais Ferstel)", ll:[48.2107,16.3658], ph:null, when:"Lun 23 · 15:30", d:"Pasaje cubierto del siglo XIX entre Herrengasse y la Freyung: arcos de mármol, tiendas y un patio con cúpula de cristal y la fuente de la ninfa del Danubio. Es el mismo palacio donde está el Café Central.", h:"Gratis, sin entrada ni puerta: se cruza a pie.", tip:"Os pilla de camino el lunes: del Palacio Kinsky cruzáis el pasaje hacia Herrengasse y seguís a pie al Graben.", q:"Ferstel Passage Herrengasse 14 Wien"},
-    {n:"Palacio Daun-Kinsky", ll:[48.2116,16.3646], ph:null, when:"Lun 23 · 15:00", d:"Joya barroca de Hildebrandt, el arquitecto del Belvedere, en plena Freyung. Hoy es la casa de subastas im Kinsky y se puede visitar por dentro gratis de lunes a viernes.", h:"Lunes a viernes en horario de oficina. En días de subasta el horario cambia: confirmadlo en la puerta.", tip:"Es también el punto de encuentro del lunes a las 14:00 (Freyung 4).", q:"Palais Daun-Kinsky Freyung 4 Wien"},
+    {n:"Pasaje Ferstel (Palais Ferstel)", ll:[48.2107,16.3658], ph:"cCentral", when:"Lun 23 · 15:30", d:"Pasaje cubierto del siglo XIX entre Herrengasse y la Freyung: arcos de mármol, tiendas y un patio con cúpula de cristal y la fuente de la ninfa del Danubio. Es el mismo palacio donde está el Café Central.", h:"Gratis, sin entrada ni puerta: se cruza a pie.", tip:"Os pilla de camino el lunes: del Palacio Kinsky cruzáis el pasaje hacia Herrengasse y seguís a pie al Graben.", q:"Ferstel Passage Herrengasse 14 Wien"},
+    {n:"Palacio Daun-Kinsky", ll:[48.2116,16.3646], ph:"kinskyIn", when:"Lun 23 · 15:00", d:"Joya barroca de Hildebrandt, el arquitecto del Belvedere, en plena Freyung. Hoy es la casa de subastas im Kinsky y se puede visitar por dentro gratis de lunes a viernes.", h:"Lunes a viernes en horario de oficina. En días de subasta el horario cambia: confirmadlo en la puerta.", tip:"Es también el punto de encuentro del lunes a las 14:00 (Freyung 4).", q:"Palais Daun-Kinsky Freyung 4 Wien"},
     {n:"Dorotheum", ll:[48.2068,16.3693], ph:null, when:"Sáb 21 o lun 23", d:"Casa de subastas de 1707 en un palacio: se pasea gratis por sus salas llenas de antigüedades, joyas y arte como si fuera un museo.", h:"Confirmad el horario; los domingos cierra.", tip:"Está en Dorotheergasse 17, en la misma calle que el Café Hawelka.", q:"Dorotheum Dorotheergasse 17 Wien"},
     {n:"Looshaus (Michaelerplatz)", ll:[48.2088,16.3670], ph:null, when:"Lun 23", d:"El edificio «sin cejas» de Adolf Loos que escandalizó al emperador, frente a la Hofburg. Hoy es un banco y se puede entrar al vestíbulo en horario de oficina.", h:"Interior solo en horario bancario (lun–vie): confirmadlo. Por fuera, siempre.", tip:"Lo veis por fuera el domingo en Michaelerplatz.", q:"Looshaus Michaelerplatz 3 Wien"},
     {n:"Iglesia de San Miguel (Michaelerkirche)", ll:[48.2083,16.3670], ph:null, when:"Dom 22", d:"Justo enfrente de la entrada de la Hofburg. La iglesia es gratis; la cripta se visita con guía de pago.", h:"Abre a diario; confirmad el horario.", tip:"Dos minutos desde Michaelerplatz.", q:"Michaelerkirche Wien"},
